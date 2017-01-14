@@ -1,9 +1,9 @@
 
 /**
- * Enumeration class CardValue - write a description of the enum class here
+ * Card values
  * 
- * @author (your name here)
- * @version (version number or date here)
+ * @author (Justin Huynh and Aaron Nguyen) 
+ * @version (Jan 14 2017)
  */
 public enum CardValue
 {
@@ -21,7 +21,7 @@ public enum CardValue
     KING(10), 
     ACE(11);
     public int cardVal;
-
+    
     private CardValue(int num)
     {
         cardVal = num;

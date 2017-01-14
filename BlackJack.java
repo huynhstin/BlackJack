@@ -55,7 +55,7 @@ public class BlackJack
         {
             Scanner in = new Scanner(System.in);
             BlackJack b = new BlackJack();
-            Deck deck = b.getDeck();
+            Deck bjDeck = b.getDeck();
             System.out.println("Press [1] to shuffle");
             System.out.println("Press [2] to view deck");
             System.out.println("Press [3] to hit");
@@ -64,10 +64,10 @@ public class BlackJack
             switch(select)
             {
                 case 1: 
-                     deck.shuffleDeck();
+                     bjDeck.shuffleDeck();
                      break;
                 case 2: 
-                     deck.printDeck(deck);
+                     bjDeck.printDeck(bjDeck);
                      break;
                 case 3:
                      b.hit(playerOne);

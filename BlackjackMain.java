@@ -18,7 +18,8 @@ public class BlackjackMain
             System.out.println("Press [1] to shuffle");
             System.out.println("Press [2] to view deck");
             System.out.println("Press [3] to hit");
-            System.out.println("Press [4] to exit");
+            System.out.println("Press [4] to view current hand");
+            System.out.println("Press [5] to exit.");
             int select = in.nextInt();
             switch(select)
             {
@@ -31,6 +32,11 @@ public class BlackjackMain
                 case 3:
                      b.hit(b.getPlayer());
                      break;
+                case 4:
+                     b.getPlayer().printCurrHand();
+                     break;
+                case 5:
+                     return;
                 default:
                      System.out.println("Pick one");
                      break;

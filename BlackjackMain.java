@@ -33,7 +33,7 @@ public class BlackjackMain
                     b.printDeck();
                     break;
                 case 3: //deal
-                    b.deal(b.getPlayer()); // to deal, hit player twice to give two cards
+                    b.deal(b.getPlayer(), 2); // to deal, hit player twice to give two cards
                     break;
                 case 4: //hit
                     if(b.isDeckSplit())

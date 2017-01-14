@@ -43,9 +43,15 @@ public class Deck
         return deck;
     }
     
-    public void printDeck() //for testing
+    public Card drawCard()
     {
-        Deck d = new Deck();
+        Card topOfDeck = deck.get(0);
+        deck.remove(0);
+        return topOfDeck;
+    }
+    
+    public void printDeck(Deck d) //for testing
+    {
         d.shuffleDeck();
         Iterator cardIterator = d.iterator();
         while (cardIterator.hasNext())

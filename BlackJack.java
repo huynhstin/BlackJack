@@ -1,31 +1,51 @@
 
 /**
- * Write a description of class BlackJack here.
+ * Blackjack Game
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author (Justin Huynh and Aaron Nguyen) 
+ * @version (Jan 14 2017)
  */
 import java.util.*;
 public class BlackJack
 {
-    public Deck deck;
+    private ArrayList<Card> deck;
     public static Hand playerOne;
-    public static Hand playerTwo;
-    public static Hand playerOneSplit;
-    public static Hand playerTwoSplit;
     
     public BlackJack()
     {
-        deck = new Deck();
+        deck = new ArrayList <Card>();
+        fillDeck();
         playerOne = new Hand();
-        playerTwo = new Hand();
-        playerOneSplit = new Hand();
-        playerTwoSplit = new Hand();
+    }
+    
+    public void fillDeck()
+    {
+        for(int i = 0; i < 13; i++)
+        {
+            CardValue cVal = CardValue.values()[i];
+            for(int j = 0; j < 4; j++)
+            {
+                Card card = new Card(cVal, Suit.values()[j]);
+                deck.add(card);
+            }
+        }
+    }
+    
+    public void shuffleDeck()
+    {
+        Collections.shuffle(deck);
+    }
+    
+    public Card drawCard()
+    {
+        Card topOfDeck = deck.get(0);
+        deck.remove(0);
+        return topOfDeck;
     }
     
     public void hit(Hand player)
     {
-        Card topOfDeck = deck.drawCard();
+        Card topOfDeck = deck.remove(0);
         player.getHand().add(topOfDeck);
         int cardDrawnVal = topOfDeck.getVal().getValue();
         player.updateTotal(cardDrawnVal);
@@ -44,38 +64,34 @@ public class BlackJack
         }
     }
     
-    public Deck getDeck()
+    public ArrayList <Card> getDeck()
     {
         return deck;
     }
     
-    public static void main (String [] args)
+    public void setDeck(ArrayList <Card> d)
     {
-        while(true)
+        deck = d;
+    }
+    
+    public void printDeck() //for testing
+    {
+        Iterator cardIterator = deck.iterator();
+        while (cardIterator.hasNext())
         {
-            Scanner in = new Scanner(System.in);
-            BlackJack b = new BlackJack();
-            Deck bjDeck = b.getDeck();
-            System.out.println("Press [1] to shuffle");
-            System.out.println("Press [2] to view deck");
-            System.out.println("Press [3] to hit");
-            //System.out.println("Press [4] to 
-            int select = in.nextInt();
-            switch(select)
-            {
-                case 1: 
-                     bjDeck.shuffleDeck();
-                     break;
-                case 2: 
-                     bjDeck.printDeck(bjDeck);
-                     break;
-                case 3:
-                     b.hit(playerOne);
-                     break;
-                default:
-                     System.out.println("Pick one");
-                     break;
-            }
+            Card aCard = (Card)cardIterator.next();
+            System.out.print(aCard.getVal() + " of " + aCard.getSuit() +"; ");
         }
+        System.out.println();
+    }
+    
+    public Iterator iterator()
+    {
+        return deck.iterator();
+    }
+    
+    public Hand getPlayer()
+    {
+        return playerOne;
     }
 }

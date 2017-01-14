@@ -13,6 +13,7 @@ public class Deck
     {
         deck = new ArrayList <Card>();
         fillDeck();
+        shuffleDeck();
     }
     
     public void fillDeck()
@@ -31,5 +32,27 @@ public class Deck
     public void shuffleDeck()
     {
         Collections.shuffle(deck);
+    }
+    
+    public Iterator iterator()
+    {
+        return deck.iterator();
+    }
+    
+    public ArrayList<Card> getDeckArr()
+    {
+        return deck;
+    }
+    
+    public void printDeck() //for testing
+    {
+        Deck d = new Deck();
+        d.shuffleDeck();
+        Iterator cardIterator = d.iterator();
+        while (cardIterator.hasNext())
+        {
+            Card aCard = (Card)cardIterator.next();
+            System.out.println(aCard.getVal() + " of " + aCard.getSuit());
+        }
     }
 }

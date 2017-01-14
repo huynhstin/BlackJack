@@ -54,12 +54,12 @@ public class BlackjackMain
                         b.hit(b.getPlayer());
                     }
                     break;                
-                case 5: //view deck
+                case 5: //view hand
                     if(b.isDeckSplit())
                     {
-                        System.out.print("First Deck: ");
+                        System.out.print("First Hand: ");
                         b.getFirstHalf().printCurrHand();
-                        System.out.print("Second Deck: ");
+                        System.out.print("Second Hand: ");
                         b.getSecondHalf().printCurrHand();
                     }
                     else

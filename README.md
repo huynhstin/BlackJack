@@ -1,2 +1,2 @@
 # BlackJack
-Blackajck game- CS Project
+Blackjack game for CS

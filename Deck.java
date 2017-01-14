@@ -41,7 +41,7 @@ public class Deck
     public ArrayList<Card> getDeckArr()
     {
         return deck;
-    }
+    } 
     
     public Card drawCard()
     {

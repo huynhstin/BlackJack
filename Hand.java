@@ -9,7 +9,7 @@ import java.util.*;
 public class Hand
 {
     public ArrayList <Card> player;
-    public int total;
+    private int total;
     public Hand()
     {
         total = 0;
@@ -30,4 +30,21 @@ public class Hand
     {
         return player;
     }
+    
+    public Iterator iterator()
+    {
+        return player.iterator();
+    }
+    
+    public void printCurrHand()
+    {
+        Iterator cardIterator = player.iterator();
+        while (cardIterator.hasNext())
+        {
+            Card aCard = (Card)cardIterator.next();
+            System.out.print(aCard.getVal() + " of " + aCard.getSuit() +"; ");
+        }
+        System.out.println();
+    }
 }
+

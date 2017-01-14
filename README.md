@@ -35,6 +35,10 @@ To Do:
     
     -> Only when initially dealt
     
+    -> Each hand gets dealt one more card, then proceed as normal
+      
+      -> Can pick which of the two split hands to hit with
+    
   Other logic:
   
     -> Dealer must hit if less than 16, stand if at least 17

@@ -13,7 +13,6 @@ public class Deck
     {
         deck = new ArrayList <Card>();
         fillDeck();
-        shuffleDeck();
     }
     
     public void fillDeck()
@@ -52,7 +51,8 @@ public class Deck
         while (cardIterator.hasNext())
         {
             Card aCard = (Card)cardIterator.next();
-            System.out.println(aCard.getVal() + " of " + aCard.getSuit());
+            System.out.print(aCard.getVal() + " of " + aCard.getSuit() +"; ");
         }
+        System.out.println();
     }
 }

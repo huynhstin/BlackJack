@@ -10,9 +10,10 @@ public class BlackJack
 {
     public Deck deck;
     public static Hand playerOne;
-    public Hand playerTwo;
-    public Hand playerOneSplit;
-    public Hand playerTwoSplit;
+    public static Hand playerTwo;
+    public static Hand playerOneSplit;
+    public static Hand playerTwoSplit;
+    
     public BlackJack()
     {
         deck = new Deck();
@@ -24,11 +25,10 @@ public class BlackJack
     
     public void hit(Hand player)
     {
-        Card topOfDeck = deck.getDeckArr().get(0);
+        Card topOfDeck = deck.drawCard();
         player.getHand().add(topOfDeck);
         int cardDrawnVal = topOfDeck.getVal().getValue();
-        playerOne.updateTotal(cardDrawnVal);
-        deck.getDeckArr().remove(0);
+        player.updateTotal(cardDrawnVal);
         check21(player);
     }
     
@@ -55,6 +55,7 @@ public class BlackJack
         {
             Scanner in = new Scanner(System.in);
             BlackJack b = new BlackJack();
+            Deck deck = b.getDeck();
             System.out.println("Press [1] to shuffle");
             System.out.println("Press [2] to view deck");
             System.out.println("Press [3] to hit");
@@ -63,10 +64,10 @@ public class BlackJack
             switch(select)
             {
                 case 1: 
-                     b.getDeck().shuffleDeck();
+                     deck.shuffleDeck();
                      break;
                 case 2: 
-                     b.getDeck().printDeck();
+                     deck.printDeck(deck);
                      break;
                 case 3:
                      b.hit(playerOne);

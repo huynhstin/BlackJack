@@ -19,7 +19,7 @@ To Do:
     
   Dealing cards:
   
-    -> Each player gets two cards at the start, visible
+    -> Player gets two cards at the start
     
   View hands:
   
@@ -27,7 +27,7 @@ To Do:
     
   Stand logic:
   
-    -> Move onto next player, until all player are done
+    -> When finished, move on to dealer
     
   Split deck:
   

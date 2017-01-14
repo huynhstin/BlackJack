@@ -2,8 +2,8 @@
 /**
  * Card which has a CardValue and a Suit
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author (Justin Huynh and Aaron Nguyen) 
+ * @version (Jan 14 2017)
  */
 public class Card
 {

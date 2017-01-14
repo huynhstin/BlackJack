@@ -1,11 +1,11 @@
 
 /**
- * Enumeration class Suit - write a description of the enum class here
+ * Suits
  * 
- * @author (your name here)
- * @version (version number or date here)
+ * @author (Justin Huynh and Aaron Nguyen)
+ * @version (Jan 14 2017)
  */
 public enum Suit
 {
-    HEARTS, SPADES, CLUBS, DIAMONDS;
+    SPADES, CLUBS, DIAMONDS, HEARTS;
 }

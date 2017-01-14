@@ -10,12 +10,14 @@ public class BlackJack
 {
     private ArrayList<Card> deck;
     public static Hand playerOne;
+    public static Hand playerTwo;
     
     public BlackJack()
     {
         deck = new ArrayList <Card>();
         fillDeck();
         playerOne = new Hand();
+        playerTwo = new Hand();
     }
     
     public void fillDeck()
@@ -56,7 +58,7 @@ public class BlackJack
     {
         if(player.getTotal() > 21)
         {
-            System.out.println("Bust");
+            System.out.println("Bust: " +player.getTotal());
         }
         else
         {

@@ -1,9 +1,9 @@
 
 /**
- * Write a description of class Hand here.
+ * Player's hands
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author (Justin Huynh and Aaron Nguyen) 
+ * @version (Jan 14 2017)
  */
 import java.util.*;
 public class Hand

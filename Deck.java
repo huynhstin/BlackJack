@@ -52,7 +52,7 @@ public class Deck
     
     public void printDeck(Deck d) //for testing
     {
-        d.shuffleDeck();
+        //d.shuffleDeck();
         Iterator cardIterator = d.iterator();
         while (cardIterator.hasNext())
         {

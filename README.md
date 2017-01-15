@@ -49,4 +49,8 @@ To Do:
   
     -> Way later
     
+  Note:
+  
+  The methods in BlackJack that take (Hand dealer, Hand player) need to be reworked to consider the case where the deck is split
+    
   

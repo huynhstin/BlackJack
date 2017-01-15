@@ -60,6 +60,7 @@ To Do:
   Rework winning logic
   
   Ace logic; when you hit with an ace and it switches from 11 to 1, hitting again results in only getting aces
+  
   See: http://i.imgur.com/O5d0s20.png
     
   

@@ -9,21 +9,21 @@ http://www.blackjack-direct.com/blackjack-rules.html
 
 To Do:
 
-  Ace logic:
+  Ace logic: (done ish, needs testing)
     
     -> Switch from 1 to 11 as needed
     
-  Dealer (done ish)
+  Dealer (done ish, needs testing)
   
     -> One of the dealer's cards is visible
     
     -> AI to keep hitting 
     
-  Dealing cards: (done)
+  Dealing cards: (done, needs testing)
   
     -> Player gets two cards at the start
     
-  View hands: (done)
+  View hands: (done, needs testing)
   
     -> Dealer has one visible card.
     
@@ -31,7 +31,7 @@ To Do:
   
     -> When finished, move on to dealer
     
-  Split deck: (done ish)
+  Split deck: (done ish, needs testing)
   
     -> When hand has two of the same cards, split into two hands
     
@@ -44,7 +44,6 @@ To Do:
   Other logic:
   
     -> Dealer must hit if less than 16, stand if at least 17
-    
     
   JFrame/Animation
   

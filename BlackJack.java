@@ -129,7 +129,7 @@ public class BlackJack
             int cardDrawnVal = topOfDeck.getVal().getValue();
             player.updateTotal(cardDrawnVal);
             deck.remove(0);
-            System.out.println("Current score: " +player.getTotal());
+            //System.out.println("Current score: " +player.getTotal()); //remove later
         }
     }
     
@@ -232,12 +232,14 @@ public class BlackJack
     
     public void splitDeck(Hand player) //this still needs testing 
     {
-        if(player.getHand().size() == 2 && player.getHand().get(0).getVal().getString().equals(player.getHand().get(1).getVal().getString())) // i'm so sorry 
+        if(player.getHand().size() == 2 && player.getHand().get(0).getVal().getString().equals(player.getHand().get(1).getVal().getString())) 
         {
             deckSplit = true;
             firstHalf.getHand().add(player.getHand().get(0)); 
+            firstHalf.updateTotal(player.getHand().get(0).getVal().getValue()); //update total to add value of player.getHand.get(0).getVal.getValue()
             deal(firstHalf, 1);
             secondHalf.getHand().add(player.getHand().get(1));
+            secondHalf.updateTotal(player.getHand().get(1).getVal().getValue());
             deal(secondHalf, 1);
             while(player.getHand().size() > 0) //while there are still objects in player's hand
             {

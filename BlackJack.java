@@ -13,7 +13,7 @@ public class BlackJack
     public static Hand secondHalf;
     public static Hand dealer;
     public boolean deckSplit;
-    public boolean youBusted;
+    public boolean youBusted; //idk if these are useful rn
     public boolean dealerBusted;
     
     public BlackJack()
@@ -159,6 +159,7 @@ public class BlackJack
                     break;
                 }
             }
+            
             if(isAce)
             {   
                 int newTot = player.getTotal() - 10; // so now instead of 11, it's 1
@@ -169,6 +170,7 @@ public class BlackJack
             {
                 System.out.println("Bust, dealer wins. Your Score: " +player.getTotal());
                 boolean youBusted = true;
+                return;
             }
         }
         else
@@ -262,15 +264,23 @@ public class BlackJack
     {
         int playerScore = player.getTotal();
         int dealerScore = dealer.getTotal();
-        if(playerScore > dealerScore)
+        if(!youBusted)
         {
-            System.out.print("You won! Your Score: "+player.getTotal());
-            System.out.println("Dealer's score: " +dealer.getTotal());
+            if(playerScore > dealerScore)
+            {
+                System.out.println("You won! Your Score: "+player.getTotal());
+                System.out.println("Dealer's score: " +dealer.getTotal());
+            }
+            else
+            {
+                System.out.println("You lost. Your Score: "+player.getTotal());   
+                System.out.println("Dealer's score: " +dealer.getTotal());
+            }
         }
         else
         {
-            System.out.print("You lost. Your Score: "+player.getTotal());   
-            System.out.println("Dealer's score: " +dealer.getTotal());
+            System.out.print("You busted, dealer wins. Your Score: "+player.getTotal());
+            return;
         }
     }
 }

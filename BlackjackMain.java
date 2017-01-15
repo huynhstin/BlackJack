@@ -58,7 +58,7 @@ public class BlackjackMain
                     break;                
                 case 5: //view hand
                     System.out.print("Dealer's face up card: ");
-                    b.getDealer().printFirstCard();
+                    b.getDealer().printCurrHand();
                     if(b.isDeckSplit())
                     {
                         System.out.print("First Hand: ");

@@ -11,6 +11,7 @@ public class BlackJack
     public static Hand playerOne; //first player
     public static Hand firstHalf; //two halves
     public static Hand secondHalf;
+    public static Hand dealer;
     public boolean deckSplit;
     
     public BlackJack()
@@ -20,6 +21,7 @@ public class BlackJack
         playerOne = new Hand();
         firstHalf = new Hand();
         secondHalf = new Hand();
+        dealer = new Hand();
         deckSplit = false;
     }
     
@@ -39,6 +41,11 @@ public class BlackJack
     public Hand getSecondHalf()
     {
         return secondHalf;
+    }
+    
+    public Hand getDealer()
+    {
+        return dealer;
     }
     
     public boolean isDeckSplit()

@@ -56,11 +56,13 @@ To Do:
   Bugs:
   
    The methods in BlackJack that take (Hand dealer, Hand player) need to be reworked to consider the case where the deck is split
+   
+   still need: merge check21 + check21dealer, merge hit + hitdealer, create bust method 
   
    Rework winning logic
   
    Ace logic; when you hit with an ace and it switches from 11 to 1, hitting again results in only getting aces
    
-    See: http://i.imgur.com/O5d0s20.png
+    See: http://i.imgur.com/O5d0s20.png (Fixed)
     
   

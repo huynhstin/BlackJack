@@ -23,9 +23,11 @@ To Do:
   
     -> Player gets two cards at the start
     
-  View hands: (done, needs testing)
+  View hands: (done ish, needs testing)
   
     -> Dealer has one visible card.
+    
+    -> But, when it's the dealer's turn (when player is done) all cards are visible
     
   Stand logic: (done, test)
   

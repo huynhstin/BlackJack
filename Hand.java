@@ -9,7 +9,7 @@ import java.util.*;
 public class Hand
 {
     public ArrayList <Card> player;
-    private int total;
+    private int total; //the score
     public Hand()
     {
         total = 0;
@@ -24,6 +24,11 @@ public class Hand
     public int getTotal()
     {
         return total;
+    }
+    
+    public void setTotal(int newScore)
+    {
+        total = newScore;
     }
     
     public ArrayList<Card> getHand()
@@ -49,8 +54,15 @@ public class Hand
     
     public void printFirstCard()
     {
-        Card aCard = (player.get(0));
-        System.out.println(aCard.getVal() + " of " + aCard.getSuit() +"; ");
+        if(player.size() != 0)
+        {
+            Card aCard = (player.get(0));
+            System.out.println(aCard.getVal() + " of " + aCard.getSuit() +"; ");
+        }
+        else 
+        {
+            System.out.println("N/A. Deal first.");
+        }
     }
 }
 

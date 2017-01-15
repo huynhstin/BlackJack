@@ -242,6 +242,10 @@ public class BlackJack
         }
     }
     
+    /**
+     * I think there's a bunch of redundancies from here down, check to see if it works
+     * With the check21s as well 
+     */
     public void dealersTurn(Hand dealer, Hand player)
     {
         System.out.println("Dealer's cards: ");
@@ -250,6 +254,8 @@ public class BlackJack
         while(dealerTot < 16)
         {
             hitDealer(dealer, player); 
+            int newDealerTot = dealer.getTotal();
+            if(newDealerTot == 17) break;
         }
         checkWhoWon(dealer, player);
     }

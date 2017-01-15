@@ -76,7 +76,7 @@ public class BlackjackMain
                     b.splitDeck(b.getPlayer());
                     break;
                 case 7: // when you stand it's dealer's turn
-                    b.dealersTurn(b.getDealer());
+                    b.dealersTurn(b.getDealer(), b.getPlayer()); //needs to consider split case
                     break;
                 case 8: //fold
                     System.out.println("You lost.");

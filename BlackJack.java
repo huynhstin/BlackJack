@@ -13,6 +13,8 @@ public class BlackJack
     public static Hand secondHalf;
     public static Hand dealer;
     public boolean deckSplit;
+    public boolean youBusted;
+    public boolean dealerBusted;
     
     public BlackJack()
     {
@@ -23,6 +25,8 @@ public class BlackJack
         secondHalf = new Hand();
         dealer = new Hand();
         deckSplit = false;
+        youBusted = false;
+        dealerBusted = false;
     }
     
     /**
@@ -159,16 +163,64 @@ public class BlackJack
             {   
                 int newTot = player.getTotal() - 10; // so now instead of 11, it's 1
                 player.setTotal(newTot);
-                System.out.println("Current score: " +player.getTotal());
+                System.out.println("Ace switched to 1. Current score: " +player.getTotal());
             }
             else
             {
                 System.out.println("Bust, dealer wins. Your Score: " +player.getTotal());
+                boolean youBusted = true;
             }
         }
         else
         {
             System.out.println("Current score: " +player.getTotal());
+        }
+    }
+    
+    /**
+     * Add top card of deck to player's hand, remove top card of deck 
+     */
+    public void hitDealer(Hand dealer, Hand player)
+    {
+        Card topOfDeck = deck.remove(0);
+        dealer.getHand().add(topOfDeck);
+        int cardDrawnVal = topOfDeck.getVal().getValue();
+        dealer.updateTotal(cardDrawnVal);
+        check21Dealer(dealer, player);
+    }
+    
+    /**
+     * Basic logic for now
+     */
+    public void check21Dealer(Hand dealer, Hand player) // needs testing
+    {
+        if(dealer.getTotal() > 21)
+        {
+            boolean isAce = false;
+            for(int i = 0; i < player.getHand().size(); i++)
+            {
+                if(dealer.getHand().get(i).getVal().getValue() == 11) // ace found; only aces are worth 11
+                {
+                    isAce = true;
+                    break;
+                }
+            }
+            if(isAce)
+            {   
+                int newTot = dealer.getTotal() - 10; // so now instead of 11, it's 1
+                dealer.setTotal(newTot);
+                System.out.println("Ace switched to 1. Current score: " +dealer.getTotal());
+            }
+            else
+            {
+                System.out.println("Dealer busted, you won. Your Score: " +player.getTotal());
+                System.out.println("Dealer's score: " +dealer.getTotal()); 
+                dealerBusted = true;
+            }
+        }
+        else
+        {
+            System.out.println("Current score: " +dealer.getTotal());
         }
     }
     
@@ -186,12 +238,35 @@ public class BlackJack
         }
         else
         {
-            System.out.println("You can't do that.");
+            System.out.println("You can't do that. Must have two of the same card");
         }
     }
     
-    public void dealersTurn()
+    public void dealersTurn(Hand dealer, Hand player)
     {
-        //put dealer AI here
+        System.out.println("Dealer's cards: ");
+        dealer.printCurrHand();
+        int dealerTot = dealer.getTotal();
+        while(dealerTot < 16)
+        {
+            hitDealer(dealer, player); 
+        }
+        checkWhoWon(dealer, player);
+    }
+    
+    public void checkWhoWon( Hand dealer, Hand player)
+    {
+        int playerScore = player.getTotal();
+        int dealerScore = dealer.getTotal();
+        if(playerScore > dealerScore)
+        {
+            System.out.print("You won! Your Score: "+player.getTotal());
+            System.out.println("Dealer's score: " +dealer.getTotal());
+        }
+        else
+        {
+            System.out.print("You lost. Your Score: "+player.getTotal());   
+            System.out.println("Dealer's score: " +dealer.getTotal());
+        }
     }
 }

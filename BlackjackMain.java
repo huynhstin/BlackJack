@@ -20,7 +20,7 @@ public class BlackjackMain
             System.out.println("Press [3] to deal."); //each player gets two cards
             System.out.println("Press [4] to hit.");
             System.out.println("Press [5] to view current hand.");
-            System.out.println("Press [6] to split.");
+            System.out.println("Press [6] to split."); // this still needs to be tested
             System.out.println("Press [7] to stand.");
             System.out.println("Press [8] to exit game.");
             int select = in.nextInt();
@@ -33,6 +33,7 @@ public class BlackjackMain
                     b.printDeck();
                     break;
                 case 3: //deal
+                    b.deal(b.getDealer(), 2);
                     b.deal(b.getPlayer(), 2); // to deal, hit player twice to give two cards
                     break;
                 case 4: //hit
@@ -55,6 +56,8 @@ public class BlackjackMain
                     }
                     break;                
                 case 5: //view hand
+                    System.out.print("Dealer's face up card: ");
+                    b.getDealer().printFirstCard();
                     if(b.isDeckSplit())
                     {
                         System.out.print("First Hand: ");
@@ -64,6 +67,7 @@ public class BlackjackMain
                     }
                     else
                     {
+                        System.out.print("Your hand: ");
                         b.getPlayer().printCurrHand();
                     }
                     break;
@@ -71,7 +75,7 @@ public class BlackjackMain
                     b.splitDeck(b.getPlayer());
                     break;
                 case 7: //stand
-                    //stand code here
+                    //System.out.println("Dealer
                 case 8:
                     return; //kill loop
                 default:

@@ -133,11 +133,13 @@ public class BlackJack
     
     /**
      * Add top card of deck to player's hand, remove top card of deck 
+     * fix this
      */
     public void hit(Hand player)
     {
-        Card topOfDeck = deck.remove(0);
+        Card topOfDeck = deck.get(0);
         player.getHand().add(topOfDeck);
+        deck.remove(0);
         int cardDrawnVal = topOfDeck.getVal().getValue();
         player.updateTotal(cardDrawnVal);
         check21(player);
@@ -159,7 +161,6 @@ public class BlackJack
                     break;
                 }
             }
-            
             if(isAce)
             {   
                 int newTot = player.getTotal() - 10; // so now instead of 11, it's 1
@@ -184,8 +185,9 @@ public class BlackJack
      */
     public void hitDealer(Hand dealer, Hand player)
     {
-        Card topOfDeck = deck.remove(0);
+        Card topOfDeck = deck.get(0);
         dealer.getHand().add(topOfDeck);
+        deck.remove(0);
         int cardDrawnVal = topOfDeck.getVal().getValue();
         dealer.updateTotal(cardDrawnVal);
         check21Dealer(dealer, player);
@@ -228,15 +230,17 @@ public class BlackJack
     
     public void splitDeck(Hand player) //this still needs testing 
     {
-        if(player.getHand().size() == 2 && player.getHand().get(0).getVal().values().equals(player.getHand().get(1).getVal().values())) // i'm so sorry 
+        if(player.getHand().size() == 2 && player.getHand().get(0).getVal().getString().equals(player.getHand().get(1).getVal().getString())) // i'm so sorry 
         {
             deckSplit = true;
             firstHalf.getHand().add(player.getHand().get(0)); 
             deal(firstHalf, 1);
             secondHalf.getHand().add(player.getHand().get(1));
             deal(secondHalf, 1);
-            playerOne.getHand().remove(0); //to make sure that they're not accidentally used anymore
-            playerOne.getHand().remove(1); //take out both the cards
+                playerOne.getHand().remove(0);
+            
+             //to make sure that they're not accidentally used anymore
+            playerOne.getHand().remove(0); //take out both the cards
         }
         else
         {
@@ -256,6 +260,8 @@ public class BlackJack
         while(dealerTot < 16)
         {
             hitDealer(dealer, player); 
+            int newDealerTot = dealer.getTotal();
+            if(newDealerTot > 16) break;
         }
         checkWhoWon(dealer, player);
     }

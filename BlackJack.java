@@ -115,7 +115,7 @@ public class BlackJack
         while (cardIterator.hasNext())
         {
             Card aCard = (Card)cardIterator.next();
-            System.out.print(aCard.getVal() + " of " + aCard.getSuit() +"; ");
+            System.out.print(aCard.getVal().getString() + " of " + aCard.getSuit() +"; ");
         }
         System.out.println();
     }
@@ -155,11 +155,16 @@ public class BlackJack
         if(player.getTotal() > 21)
         {
             boolean isAce = false;
+            int index = 0;
+            Suit s = Suit.SPADES; //set as default for now
             for(int i = 0; i < player.getHand().size(); i++)
             {
                 if(player.getHand().get(i).getVal().getValue() == 11) // ace found; only aces are worth 11
                 {
                     isAce = true;
+                    index = i;
+                    s = player.getHand().get(i).getSuit(); //update the ace's suit 
+                    //player.getHand().remove(i);
                     break;
                 }
             }
@@ -167,6 +172,8 @@ public class BlackJack
             {   
                 int newTot = player.getTotal() - 10; // so now instead of 11, it's 1
                 player.setTotal(newTot);
+                Card newAce = new Card(CardValue.values()[13], s); //13 = ace2
+                player.getHand().set(index, newAce);
                 System.out.println("Ace switched to 1. Current score: " +player.getTotal());
             }
             else
@@ -184,7 +191,7 @@ public class BlackJack
     
     /**
      * Add top card of deck to player's hand, remove top card of deck 
-     */
+     
     public void hitDealer(Hand dealer, Hand player)
     {
         Card topOfDeck = deck.get(0);
@@ -195,9 +202,9 @@ public class BlackJack
         check21Dealer(dealer, player);
     }
     
-    /**
+    
      * Basic logic for now
-     */
+     *
     public void check21Dealer(Hand dealer, Hand player) // needs testing
     {
         if(dealer.getTotal() > 21)
@@ -229,6 +236,7 @@ public class BlackJack
             System.out.println("Current score: " +dealer.getTotal());
         }
     }
+    */
     
     public void splitDeck(Hand player) //this still needs testing 
     {

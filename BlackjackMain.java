@@ -22,7 +22,8 @@ public class BlackjackMain
             System.out.println("Press [5] to view current hand.");
             System.out.println("Press [6] to split."); // this still needs to be tested
             System.out.println("Press [7] to stand.");
-            System.out.println("Press [8] to exit game.");
+            System.out.println("Press [8] to fold.");
+            System.out.println("Press [9] to exit game.");
             int select = in.nextInt();
             switch(select)
             {
@@ -74,9 +75,13 @@ public class BlackjackMain
                 case 6: //split deck
                     b.splitDeck(b.getPlayer());
                     break;
-                case 7: //stand
-                    //System.out.println("Dealer
-                case 8:
+                case 7: // when you stand it's dealer's turn
+                    b.dealersTurn(b.getDealer());
+                    break;
+                case 8: //fold
+                    System.out.println("You lost.");
+                    break;
+                case 9:
                     return; //kill loop
                 default:
                     System.out.println("Pick one");

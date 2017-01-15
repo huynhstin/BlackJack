@@ -83,6 +83,7 @@ public class BlackjackMain
                     return;
                 case 9:
                     //reset game 
+                    break;
                 default:
                     System.out.println("Pick one");
                     break;

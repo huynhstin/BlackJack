@@ -118,7 +118,7 @@ public class BlackJack
     
     public void deal(Hand player, int numberOfCards)
     {
-        for(int i = 0; i < numberOfCards; i++) //just hit twice, withour returning current score
+        for(int i = 0; i < numberOfCards; i++) //same as hit but without returning current score
         {
             Card topOfDeck = deck.remove(0);
             player.getHand().add(topOfDeck);
@@ -142,11 +142,29 @@ public class BlackJack
     /**
      * Basic logic for now
      */
-    public void check21(Hand player)
+    public void check21(Hand player) // needs testing
     {
         if(player.getTotal() > 21)
         {
-            System.out.println("Bust: " +player.getTotal());
+            boolean isAce = false;
+            for(int i = 0; i < player.getHand().size(); i++)
+            {
+                if(player.getHand().get(i).getVal().getValue() == 11) // ace found; only aces are worth 11
+                {
+                    isAce = true;
+                    break;
+                }
+            }
+            if(isAce)
+            {   
+                int newTot = player.getTotal() - 10; // so now instead of 11, it's 1
+                player.setTotal(newTot);
+                System.out.println("Current score: " +player.getTotal());
+            }
+            else
+            {
+                System.out.println("Bust, dealer wins. Your Score: " +player.getTotal());
+            }
         }
         else
         {
@@ -154,7 +172,7 @@ public class BlackJack
         }
     }
     
-    public void splitDeck(Hand player)
+    public void splitDeck(Hand player) //this still needs testing 
     {
         if(player.getHand().size() == 2 && player.getHand().get(0).getVal().values().equals(player.getHand().get(1).getVal().values())) // i'm so sorry 
         {
@@ -170,5 +188,10 @@ public class BlackJack
         {
             System.out.println("You can't do that.");
         }
+    }
+    
+    public void dealersTurn()
+    {
+        //put dealer AI here
     }
 }

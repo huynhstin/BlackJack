@@ -57,18 +57,18 @@ public class BlackjackMain
                     }
                     break;                
                 case 5: //view hand
-                    System.out.print("Dealer's face up card: ");
-                    b.getDealer().printCurrHand();
+                    System.out.print("Dealer's face up card: ("+b.getDealer().getTotal() +") ");
+                    b.getDealer().printCurrHand(); //change to print first later
                     if(b.isDeckSplit())
                     {
-                        System.out.print("First Hand: ");
+                        System.out.print("First Hand: ("+b.getFirstHalf().getTotal() +") ");
                         b.getFirstHalf().printCurrHand();
-                        System.out.print("Second Hand: ");
+                        System.out.print("Second Hand: ("+b.getSecondHalf().getTotal() +") ");
                         b.getSecondHalf().printCurrHand();
                     }
                     else
                     {
-                        System.out.print("Your hand: ");
+                        System.out.print("Your hand: ("+b.getPlayer().getTotal() +") ");
                         b.getPlayer().printCurrHand();
                     }
                     break;

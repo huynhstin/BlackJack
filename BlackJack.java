@@ -124,10 +124,12 @@ public class BlackJack
     {
         for(int i = 0; i < numberOfCards; i++) //same as hit but without returning current score
         {
-            Card topOfDeck = deck.remove(0);
+            Card topOfDeck = deck.get(0);
             player.getHand().add(topOfDeck);
             int cardDrawnVal = topOfDeck.getVal().getValue();
             player.updateTotal(cardDrawnVal);
+            deck.remove(0);
+            System.out.println("Current score: " +player.getTotal());
         }
     }
     
@@ -237,10 +239,10 @@ public class BlackJack
             deal(firstHalf, 1);
             secondHalf.getHand().add(player.getHand().get(1));
             deal(secondHalf, 1);
-                playerOne.getHand().remove(0);
-            
-             //to make sure that they're not accidentally used anymore
-            playerOne.getHand().remove(0); //take out both the cards
+            while(player.getHand().size() > 0) //while there are still objects in player's hand
+            {
+                player.getHand().remove(0);
+            }
         }
         else
         {

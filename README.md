@@ -32,6 +32,8 @@ To Do:
   Stand logic: (done, test)
   
     -> When finished, move on to dealer
+      
+    -> Fix infinite loop on stand
     
   Split deck: (done ish, needs testing)
   

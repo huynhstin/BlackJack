@@ -23,7 +23,7 @@ public class BlackjackMain
             System.out.println("Press [6] to split."); // this still needs to be tested
             System.out.println("Press [7] to stand.");
             System.out.println("Press [8] to fold.");
-            System.out.println("Press [9] to exit game.");
+            System.out.println("Press [9] to reset game.");
             int select = in.nextInt();
             switch(select)
             {
@@ -82,7 +82,7 @@ public class BlackjackMain
                     System.out.println("You lost.");
                     return;
                 case 9:
-                    return; //kill loop
+                    //reset game 
                 default:
                     System.out.println("Pick one");
                     break;

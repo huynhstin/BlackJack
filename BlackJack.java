@@ -254,13 +254,11 @@ public class BlackJack
         while(dealerTot < 16)
         {
             hitDealer(dealer, player); 
-            int newDealerTot = dealer.getTotal();
-            if(newDealerTot == 17) break;
         }
         checkWhoWon(dealer, player);
     }
     
-    public void checkWhoWon( Hand dealer, Hand player)
+    public void checkWhoWon(Hand dealer, Hand player)
     {
         int playerScore = player.getTotal();
         int dealerScore = dealer.getTotal();

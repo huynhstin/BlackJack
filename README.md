@@ -27,7 +27,7 @@ To Do:
   
     -> Dealer has one visible card.
     
-  Stand logic:
+  Stand logic: (done, test)
   
     -> When finished, move on to dealer
     
@@ -41,7 +41,7 @@ To Do:
       
       -> Can pick which of the two split hands to hit with
     
-  Other logic:
+  Other logic: 
   
     -> Dealer must hit if less than 16, stand if at least 17
     

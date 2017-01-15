@@ -13,15 +13,17 @@ To Do:
     
     -> Switch from 1 to 11 as needed
     
-  Dealer
+  Dealer (done ish)
   
     -> One of the dealer's cards is visible
     
-  Dealing cards:
+    -> AI to keep hitting 
+    
+  Dealing cards: (done)
   
     -> Player gets two cards at the start
     
-  View hands:
+  View hands: (done)
   
     -> Dealer has one visible card.
     
@@ -29,7 +31,7 @@ To Do:
   
     -> When finished, move on to dealer
     
-  Split deck:
+  Split deck: (done ish)
   
     -> When hand has two of the same cards, split into two hands
     
@@ -43,8 +45,9 @@ To Do:
   
     -> Dealer must hit if less than 16, stand if at least 17
     
-    -> You can't hit after you split
     
   JFrame/Animation
+  
+    -> Way later
     
   

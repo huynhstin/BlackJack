@@ -46,5 +46,11 @@ public class Hand
         }
         System.out.println();
     }
+    
+    public void printFirstCard()
+    {
+        Card aCard = (player.get(0));
+        System.out.println(aCard.getVal() + " of " + aCard.getSuit() +"; ");
+    }
 }
 

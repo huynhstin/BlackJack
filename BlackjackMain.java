@@ -80,7 +80,7 @@ public class BlackjackMain
                     break;
                 case 8: //fold
                     System.out.println("You lost.");
-                    break;
+                    return;
                 case 9:
                     return; //kill loop
                 default:

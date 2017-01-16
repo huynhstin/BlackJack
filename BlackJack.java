@@ -14,6 +14,8 @@ public class BlackJack
     public static Hand dealer;
     public boolean deckSplit;
     public boolean youBusted; //idk if these are useful rn
+    public boolean firstBust;
+    public boolean secondBust;
     public boolean dealerBusted;
     
     public BlackJack()
@@ -31,6 +33,7 @@ public class BlackJack
     
     /**
      * Get methods
+     * Note: rewrite code to modify instance variables instead
      */
     public Hand getPlayer()
     {
@@ -157,7 +160,7 @@ public class BlackJack
             boolean isAce = false;
             int index = 0;
             Suit s = Suit.SPADES; //set as default for now
-            for(int i = 0; i < player.getHand().size(); i++)
+            for(int i = 0; i < player.getHand().size(); i++) // look for 
             {
                 if(player.getHand().get(i).getVal().getValue() == 11) // ace found; only aces are worth 11
                 {
@@ -176,11 +179,44 @@ public class BlackJack
                 player.getHand().set(index, newAce);
                 System.out.println("Ace switched to 1. Current score: " +player.getTotal());
             }
-            else
+            else //bust 
             {
-                System.out.println("Bust, dealer wins. Your Score: " +player.getTotal());
-                boolean youBusted = true;
-                return;
+                //System.out.println("Bust, dealer wins. Your Score: " +player.getTotal());
+                if(deckSplit)
+                {
+                    if(player.equals(firstHalf))
+                    {
+                        firstBust = true;
+                        if(!secondBust)
+                        {
+                            System.out.println("First hand busted, but you still have your second.");
+                            return;
+                        }
+                        else
+                        {
+                            checkWhoWon();
+                        }
+                    }
+                    else if(player.equals(secondHalf))
+                    {
+                        secondBust = true;
+                        if(!firstBust)
+                        {
+                            System.out.println("Second hand busted, but you still have your first.");
+                            return;
+                        }
+                        else
+                        {
+                            checkWhoWon();
+                        }
+                    }
+                }
+                else
+                {
+                    youBusted = true;
+                    checkWhoWon();
+                    return;
+                }
             }
         }
         else
@@ -238,20 +274,20 @@ public class BlackJack
     }
     */
     
-    public void splitDeck(Hand player) //this still needs testing 
+    public void splitDeck() //this still needs testing 
     {
-        if(player.getHand().size() == 2 && player.getHand().get(0).getVal().getString().equals(player.getHand().get(1).getVal().getString())) 
+        if(playerOne.getHand().size() == 2 && playerOne.getHand().get(0).getVal().getString().equals(playerOne.getHand().get(1).getVal().getString())) 
         {
             deckSplit = true;
-            firstHalf.getHand().add(player.getHand().get(0)); 
-            firstHalf.updateTotal(player.getHand().get(0).getVal().getValue()); //update total to add value of player.getHand.get(0).getVal.getValue()
+            firstHalf.getHand().add(playerOne.getHand().get(0)); 
+            firstHalf.updateTotal(playerOne.getHand().get(0).getVal().getValue()); //update total to add value of player.getHand.get(0).getVal.getValue()
             deal(firstHalf, 1);
-            secondHalf.getHand().add(player.getHand().get(1));
-            secondHalf.updateTotal(player.getHand().get(1).getVal().getValue());
+            secondHalf.getHand().add(playerOne.getHand().get(1));
+            secondHalf.updateTotal(playerOne.getHand().get(1).getVal().getValue());
             deal(secondHalf, 1);
-            while(player.getHand().size() > 0) //while there are still objects in player's hand
+            while(playerOne.getHand().size() > 0) //while there are still objects in player's hand
             {
-                player.getHand().remove(0);
+                playerOne.getHand().remove(0);
             }
         }
         else
@@ -264,41 +300,51 @@ public class BlackJack
      * I think there's a bunch of redundancies from here down, check to see if it works
      * With the check21s as well 
      */
-    public void dealersTurn(Hand dealer, Hand player)
+    public void dealersTurn()
     {
         System.out.println("Dealer's cards: ");
         dealer.printCurrHand();
         int dealerTot = dealer.getTotal();
         while(dealerTot < 16)
         {
-            hitDealer(dealer, player); 
+            hit(dealer); 
             int newDealerTot = dealer.getTotal();
             if(newDealerTot > 16) break;
         }
-        checkWhoWon(dealer, player);
+        checkWhoWon();
     }
     
-    public void checkWhoWon(Hand dealer, Hand player)
+    public void checkWhoWon()
     {
-        int playerScore = player.getTotal();
+        int playerScore = playerOne.getTotal();
         int dealerScore = dealer.getTotal();
-        if(!youBusted)
+        if(!deckSplit)
         {
-            if(playerScore > dealerScore)
+            if(!youBusted)
             {
-                System.out.println("You won! Your Score: "+player.getTotal());
-                System.out.println("Dealer's score: " +dealer.getTotal());
+                if(playerScore > dealerScore)
+                {
+                    System.out.println("You won! Your Score: "+playerOne.getTotal());
+                    System.out.println("Dealer's score: " +dealer.getTotal());
+                }
+                else
+                {
+                    System.out.println("You lost. Your Score: "+playerOne.getTotal());   
+                    System.out.println("Dealer's score: " +dealer.getTotal());
+                }
             }
             else
             {
-                System.out.println("You lost. Your Score: "+player.getTotal());   
-                System.out.println("Dealer's score: " +dealer.getTotal());
+                System.out.print("You busted, dealer wins. Your Score: "+playerOne.getTotal());
+                return;
             }
         }
-        else
+        else //deck is split
         {
-            System.out.print("You busted, dealer wins. Your Score: "+player.getTotal());
-            return;
+            if(firstBust)
+            {
+                
+            }
         }
     }
 }

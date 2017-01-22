@@ -1,6 +1,11 @@
 /**
  * Blackjack Game
  * 
+ * Fix: 
+ * split logic; should create a new Player to add in the players isntance variable ArrayList
+ *  - Split hand in half by adding Player's hand at [1] to new player
+ * 
+ * 
  * @author (Justin Huynh and Aaron Nguyen) 
  * @version (Jan 14 2017)
  */
@@ -8,69 +13,28 @@ import java.util.*;
 public class BlackJack
 {
     private ArrayList<Card> deck; //the deck itself
-    public static Hand playerOne; //first player
-    public static Hand firstHalf; //two halves
-    public static Hand secondHalf;
-    public static Hand dealer;
-    public boolean deckSplit;
-    public boolean youBusted; //idk if these are useful rn
-    public boolean firstBust;
-    public boolean secondBust;
-    public boolean dealerBusted;
+    public ArrayList<Player> players; // the list of players
+    public Player dealer;
+    public Player aaron;
     
     public BlackJack()
     {
         deck = new ArrayList <Card>();
         fillDeck();
-        playerOne = new Hand();
-        firstHalf = new Hand();
-        secondHalf = new Hand();
-        dealer = new Hand();
-        deckSplit = false;
-        youBusted = false;
-        dealerBusted = false;
+        players = new ArrayList <Player>(); 
+        aaron = new Player();
+        players.add(aaron);
+        dealer = new Player();
     }
-    
-    /**
-     * Get methods
-     * Note: rewrite code to modify instance variables instead
-     */
-    public Hand getPlayer()
-    {
-        return playerOne;
-    }
-    
-    public Hand getFirstHalf()
-    {
-        return firstHalf;
-    }
-    
-    public Hand getSecondHalf()
-    {
-        return secondHalf;
-    }
-    
-    public Hand getDealer()
+
+    public Player getDealer()
     {
         return dealer;
     }
-    
-    public boolean isDeckSplit()
-    {
-        return deckSplit;
-    }
-    
+
     public ArrayList <Card> getDeck()
     {
         return deck;
-    }
-    
-    /**
-     * Kinda useless rn
-     */
-    public void setDeck(ArrayList <Card> d)
-    {
-        deck = d;
     }
     
     /**
@@ -80,10 +44,9 @@ public class BlackJack
     {
         for(int i = 0; i < 13; i++)
         {
-            CardValue cVal = CardValue.values()[i];
             for(int j = 0; j < 4; j++)
             {
-                Card card = new Card(cVal, Suit.values()[j]);
+                Card card = new Card(CardValue.values()[i], Suit.values()[j]);
                 deck.add(card);
             }
         }
@@ -112,7 +75,7 @@ public class BlackJack
         return deck.iterator();
     }
     
-    public void printDeck() //for testing
+    public void printDeck() 
     {
         Iterator cardIterator = deck.iterator();
         while (cardIterator.hasNext())
@@ -123,228 +86,123 @@ public class BlackJack
         System.out.println();
     }
     
-    public void deal(Hand player, int numberOfCards)
+    public void deal(Player player, int numberOfCards)
     {
         for(int i = 0; i < numberOfCards; i++) //same as hit but without returning current score
         {
-            Card topOfDeck = deck.get(0);
-            player.getHand().add(topOfDeck);
-            int cardDrawnVal = topOfDeck.getVal().getValue();
-            player.updateTotal(cardDrawnVal);
-            deck.remove(0);
-            //System.out.println("Current score: " +player.getTotal()); //remove later
+            hit(player);
         }
     }
     
     /**
-     * Add top card of deck to player's hand, remove top card of deck 
-     * fix this
+     * Add top card of deck to player's Player, remove top card of deck 
+     * need to add an ending where player busts all his decks
      */
-    public void hit(Hand player)
+    public void hit(Player player)
     {
-        Card topOfDeck = deck.get(0);
-        player.getHand().add(topOfDeck);
-        deck.remove(0);
-        int cardDrawnVal = topOfDeck.getVal().getValue();
-        player.updateTotal(cardDrawnVal);
-        check21(player);
+        Card topOfDeck = drawCard();
+        player.hand.add(topOfDeck);
     }
-    
+        
     /**
-     * Basic logic for now
+     * aaron's check21. return a boolean whether or not busted
      */
-    public void check21(Hand player) // needs testing
+    public boolean checkBust(Player player) 
     {
-        if(player.getTotal() > 21)
+        if(player.getTotal() > 21) 
         {
-            boolean isAce = false;
-            int index = 0;
-            Suit s = Suit.SPADES; //set as default for now
-            for(int i = 0; i < player.getHand().size(); i++) // look for 
+            //checks for potential ace
+            for(int i = 0; i < player.hand.size(); i++) 
             {
-                if(player.getHand().get(i).getVal().getValue() == 11) // ace found; only aces are worth 11
+                if(player.hand.get(i).getVal().getValue() == 11) // ace found; only aces are worth 11
                 {
-                    isAce = true;
-                    index = i;
-                    s = player.getHand().get(i).getSuit(); //update the ace's suit 
-                    //player.getHand().remove(i);
+                    Card newAce = new Card(CardValue.values()[13],player.hand.get(i).getSuit()); //13 = ace2
+                    player.hand.set(i,newAce);
                     break;
                 }
             }
-            if(isAce)
-            {   
-                int newTot = player.getTotal() - 10; // so now instead of 11, it's 1
-                player.setTotal(newTot);
-                Card newAce = new Card(CardValue.values()[13], s); //13 = ace2
-                player.getHand().set(index, newAce);
-                System.out.println("Ace switched to 1. Current score: " +player.getTotal());
-            }
-            else //bust 
-            {
-                //System.out.println("Bust, dealer wins. Your Score: " +player.getTotal());
-                if(deckSplit)
-                {
-                    if(player.equals(firstHalf))
-                    {
-                        firstBust = true;
-                        if(!secondBust)
-                        {
-                            System.out.println("First hand busted, but you still have your second.");
-                            return;
-                        }
-                        else
-                        {
-                            checkWhoWon();
-                        }
-                    }
-                    else if(player.equals(secondHalf))
-                    {
-                        secondBust = true;
-                        if(!firstBust)
-                        {
-                            System.out.println("Second hand busted, but you still have your first.");
-                            return;
-                        }
-                        else
-                        {
-                            checkWhoWon();
-                        }
-                    }
-                }
-                else
-                {
-                    youBusted = true;
-                    checkWhoWon();
-                    return;
-                }
-            }
+        }
+        return(player.getTotal()>21);
+    }
+    
+    public void splitDeck(Player player)  
+    {
+            Player newPlayer = new Player();
+            Card splitter = player.hand.get(1); //second card of first deck
+            player.hand.remove(1);
+            newPlayer.hand.add(splitter);
+            hit(player);
+            hit(newPlayer);
+            players.add(newPlayer);
+    }
+
+    public void doubleDown(Player player)
+    {
+        if(player.hand.size() == 2 && player.hand.get(0).getVal().getValue() + player.hand.get(1).getVal().getValue() >= 10 && 
+        player.hand.get(0).getVal().getValue() + player.hand.get(1).getVal().getValue() <= 11) //Player has 2 cards, which add up to between 9-11
+        {
+            Card invisible = drawCard();
+            invisible.setVisible(false);
+            player.hand.add(invisible);
         }
         else
         {
-            System.out.println("Current score: " +player.getTotal());
-        }
-    }
-    
-    /**
-     * Add top card of deck to player's hand, remove top card of deck 
-     
-    public void hitDealer(Hand dealer, Hand player)
-    {
-        Card topOfDeck = deck.get(0);
-        dealer.getHand().add(topOfDeck);
-        deck.remove(0);
-        int cardDrawnVal = topOfDeck.getVal().getValue();
-        dealer.updateTotal(cardDrawnVal);
-        check21Dealer(dealer, player);
-    }
-    
-    
-     * Basic logic for now
-     *
-    public void check21Dealer(Hand dealer, Hand player) // needs testing
-    {
-        if(dealer.getTotal() > 21)
-        {
-            boolean isAce = false;
-            for(int i = 0; i < player.getHand().size(); i++)
-            {
-                if(dealer.getHand().get(i).getVal().getValue() == 11) // ace found; only aces are worth 11
-                {
-                    isAce = true;
-                    break;
-                }
-            }
-            if(isAce)
-            {   
-                int newTot = dealer.getTotal() - 10; // so now instead of 11, it's 1
-                dealer.setTotal(newTot);
-                System.out.println("Ace switched to 1. Current score: " +dealer.getTotal());
-            }
-            else
-            {
-                System.out.println("Dealer busted, you won. Your Score: " +player.getTotal());
-                System.out.println("Dealer's score: " +dealer.getTotal()); 
-                dealerBusted = true;
-            }
-        }
-        else
-        {
-            System.out.println("Current score: " +dealer.getTotal());
-        }
-    }
-    */
-    
-    public void splitDeck() //this still needs testing 
-    {
-        if(playerOne.getHand().size() == 2 && playerOne.getHand().get(0).getVal().getString().equals(playerOne.getHand().get(1).getVal().getString())) 
-        {
-            deckSplit = true;
-            firstHalf.getHand().add(playerOne.getHand().get(0)); 
-            firstHalf.updateTotal(playerOne.getHand().get(0).getVal().getValue()); //update total to add value of player.getHand.get(0).getVal.getValue()
-            deal(firstHalf, 1);
-            secondHalf.getHand().add(playerOne.getHand().get(1));
-            secondHalf.updateTotal(playerOne.getHand().get(1).getVal().getValue());
-            deal(secondHalf, 1);
-            while(playerOne.getHand().size() > 0) //while there are still objects in player's hand
-            {
-                playerOne.getHand().remove(0);
-            }
-        }
-        else
-        {
-            System.out.println("You can't do that. Must have two of the same card");
-        }
+            System.out.println("Conditions not met to double down hand");
+        }        
     }
     
     /**
      * I think there's a bunch of redundancies from here down, check to see if it works
      * With the check21s as well 
-     */
+     **/
+     //aaron's
     public void dealersTurn()
     {
-        System.out.println("Dealer's cards: ");
-        dealer.printCurrHand();
-        int dealerTot = dealer.getTotal();
-        while(dealerTot < 16)
+        while(dealer.getTotal() < 16)
         {
             hit(dealer); 
-            int newDealerTot = dealer.getTotal();
-            if(newDealerTot > 16) break;
+        }
+        
+        if(checkBust(dealer))
+        {
+            System.out.println("Dealer Busted! You win!");
+            return;
         }
         checkWhoWon();
     }
     
     public void checkWhoWon()
     {
-        int playerScore = playerOne.getTotal();
-        int dealerScore = dealer.getTotal();
-        if(!deckSplit)
+       int bestTotal = players.get(0).getTotal();
+       for(int i = 0; i < players.size(); i++) // goes through all your hands to find the total that is greatest. or closest to 21
+       {
+           if(players.get(i).getTotal() > bestTotal && players.get(i).getTotal() <= 21)
+           {
+               bestTotal = players.get(i).getTotal();
+           }
+       }
+       System.out.print("Your best hand is "+bestTotal+" and dealer's is "+dealer.getTotal()+".");
+       if(bestTotal > dealer.getTotal())
+       {
+           System.out.println(" You win!");
+       }
+       else
+       {
+           System.out.println(" You lose!");
+       }
+    }
+    
+    public void giveCard(int value,int player)
+    {
+        Card a = new Card(CardValue.TWO,Suit.SPADES);
+        for(int i=0;i<deck.size();i++)
         {
-            if(!youBusted)
+            if(deck.get(i).getVal().getValue()==value)
             {
-                if(playerScore > dealerScore)
-                {
-                    System.out.println("You won! Your Score: "+playerOne.getTotal());
-                    System.out.println("Dealer's score: " +dealer.getTotal());
-                }
-                else
-                {
-                    System.out.println("You lost. Your Score: "+playerOne.getTotal());   
-                    System.out.println("Dealer's score: " +dealer.getTotal());
-                }
-            }
-            else
-            {
-                System.out.print("You busted, dealer wins. Your Score: "+playerOne.getTotal());
-                return;
+                a=deck.get(i);
+                break;
             }
         }
-        else //deck is split
-        {
-            if(firstBust)
-            {
-                
-            }
-        }
+        players.get(player).hand.add(a);
     }
 }

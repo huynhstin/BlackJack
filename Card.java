@@ -1,4 +1,3 @@
-
 /**
  * Card which has a CardValue and a Suit
  * 
@@ -9,10 +8,12 @@ public class Card
 {
     public CardValue cardVal;
     public Suit suit;
+    public boolean visible;
     public Card(CardValue v, Suit s)
     {
         cardVal = v;
         suit = s;
+        visible = true;
     }
     
     public Suit getSuit()
@@ -33,5 +34,10 @@ public class Card
     public void setSuit(Suit newSuit)
     {
         suit = newSuit;
+    }
+    
+    public void setVisible(boolean choice)
+    {
+        visible = choice;
     }
 }

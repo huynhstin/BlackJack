@@ -16,7 +16,6 @@ public class BlackjackMain
     public static void main(String[] args)
     {
        Scanner in = new Scanner(System.in);
-       boolean program = true;
        quitter: while(true)
        {
            BlackJack b = new BlackJack();
@@ -72,6 +71,17 @@ public class BlackjackMain
                    case 3: //deal
                        b.deal(b.dealer, 2);
                        b.deal(b.players.get(0), 2); // give each player two cards
+                       if(b.players.get(0).getTotal() == 21 && b.players.get(0).getHand().size() == 2)
+                       {
+                           if(b.dealer.getTotal() == 21 && b.dealer.getHand().size() == 2)
+                           {
+                               b.printWon(-4);
+                           }
+                           else
+                           {
+                               b.printWon(-3);
+                           }
+                       }
                        break;
                    case 4: 
                        int a = 0;

@@ -17,12 +17,10 @@ public class BlackjackMain
     {
        Scanner in = new Scanner(System.in);
        boolean program = true;
-       boolean continue1;
-       while(program)
+       quitter: while(true)
        {
-           continue1 = true;
            BlackJack b = new BlackJack();
-           while(continue1)
+           resetter: while(true)
            {    
                System.out.println("Press [0] to double down.");
                System.out.println("Press [1] to shuffle.");
@@ -35,19 +33,34 @@ public class BlackjackMain
                System.out.println("Press [8] to quit.");
                System.out.println("Press [9] to reset game.");
                System.out.println("Press [10] to hit a specific card");
+               System.out.println("Press [11] to remove a specific card");
                int select = in.nextInt();
                switch(select)
                {
                    case 0:
+                       int c = 0;
                        if(b.players.size() > 1) //new hit
                        {
                            System.out.println("Which deck do you wish to double down?");
-                           int a = in.nextInt() - 1;
-                           b.doubleDown(b.players.get(a));
+                           c = in.nextInt() - 1;
                        }
-                       else
+                       b.doubleDown(b.players.get(c));
+                       if(b.allBustOrDD())
                        {
-                           b.doubleDown(b.players.get(0));
+                           System.out.println("You can no longer hit. Dealer's turn. \n");
+                           b.dealersTurn();
+                           b.printAll(true);
+                           Scanner in2 = new Scanner(System.in);
+                           System.out.println("Play again? Y/N");
+                           String selec = in2.nextLine();
+                           if(selec.equalsIgnoreCase("y"))
+                           {
+                               break resetter;
+                           }
+                           else
+                           {
+                               break quitter;
+                           }
                        }
                        break;
                    case 1: // shuffle
@@ -67,7 +80,6 @@ public class BlackjackMain
                            System.out.println("Which deck do you wish to hit?");
                            a = in.nextInt() - 1;
                        }
-                          
                        if(b.checkBust(b.players.get(a)))
                        {
                            System.out.println("Deck busted. Choose a different deck");
@@ -79,50 +91,44 @@ public class BlackjackMain
                        else
                        {
                            b.hit(b.players.get(a));
+                           if(b.allBustOrDD())
+                           {
+                               System.out.println("You can no longer hit. Dealer's turn. \n");
+                               b.dealersTurn();
+                               b.printAll(true);
+                               Scanner in3 = new Scanner(System.in);
+                               System.out.println("Play again? Y/N");
+                               String select1 = in3.nextLine();
+                               if(select1.equalsIgnoreCase("y"))
+                               {
+                                   break resetter;
+                               }
+                               else
+                               {
+                                   break quitter;
+                               }
+                           }
                        }
-   
-                       System.out.print("Dealer: ");
-                       System.out.println(b.dealer.getTotal());
-                       System.out.println("You: ");
-                       for(int i = 0; i < b.players.size(); i++)
-                       {
-                          System.out.println("Hand " + (i+1) + " : "+b.players.get(i).getTotal());
-                       }
+                       b.printAll(false);
                        break;                
                    case 5: //view hands of all players
-                       System.out.print("Dealer's face up card: ");
-                       b.dealer.printCurrPlayer();
-                       for(int i = 0; i < b.players.size(); i++)
-                       {
-                           System.out.print("Hand " + (i+1) + ": ");
-                           b.players.get(i).printCurrPlayer();
-                       }
+                       b.printAll(false);
                        break;
                    case 6: //split deck
+                       int deckChoice = 0;
                        if(b.players.size() > 1)
                        {
                            System.out.println("Which deck do you wish to split?");
-                           int deckChoice = in.nextInt() - 1;
-                           if(b.players.get(deckChoice).getHand().size() == 2 && b.players.get(deckChoice).getHand().get(0).getVal().getString().equals(b.players.get(deckChoice).getHand().get(1).getVal().getString())) 
-                           {
-                               b.splitDeck(b.players.get(deckChoice));
-                           }
-                           else
-                           {
-                               System.out.println("Deck cannot be split.");
-                           }   
+                           deckChoice = in.nextInt() - 1;
+                       }
+                       if(b.players.get(deckChoice).getHand().size() == 2 && b.players.get(deckChoice).getHand().get(0).getVal().getString().equals(b.players.get(deckChoice).getHand().get(1).getVal().getString())) 
+                       {
+                           b.splitDeck(b.players.get(deckChoice));
                        }
                        else
                        {
-                           if(b.players.get(0).getHand().size() == 2 && b.players.get(0).getHand().get(0).getVal().getString().equals(b.players.get(0).getHand().get(1).getVal().getString()))
-                           {
-                               b.splitDeck(b.players.get(0));
-                           }
-                           else
-                           {
-                               System.out.println("Deck cannot be split.");
-                           }
-                       }
+                           System.out.println("Deck cannot be split.");
+                       } 
                        break;
                    case 7: // when you stand it's dealer's turn
                        b.dealersTurn(); 
@@ -131,22 +137,16 @@ public class BlackjackMain
                        String choice = in1.nextLine();
                        if(choice.equals("y"))
                        {
-                           continue1=false;
-                           //continue;
+                           break resetter;
                        }
                        else
                        {
-                           continue1=false;
-                           program=false;
+                           break quitter;
                        }
-                       break;
                    case 8: //quit
-                       continue1 = false;
-                       program = false;
-                       break;
+                       break quitter;
                    case 9://reset game
-                       continue1 = false;
-                       break;
+                       break resetter;
                    case 10://find specific card
                        System.out.println("What value?");
                        int value = in.nextInt();
@@ -159,6 +159,22 @@ public class BlackjackMain
                        else
                        {
                            b.giveCard(value , 0);
+                       }
+                       break;
+                   case 11:
+                       if(b.players.size() > 1)
+                       {
+                           System.out.println("Which deck?");
+                           int choiceDeck = in.nextInt() - 1; 
+                           System.out.println("Which card number in the deck?");
+                           int choiceCard = in.nextInt() - 1;
+                           b.removeCard(choiceDeck, choiceCard);
+                       }
+                       else
+                       {
+                           System.out.println("Which card number in the deck?");
+                           int choiceCard = in.nextInt() - 1;
+                           b.removeCard(0, choiceCard); 
                        }
                        break;
                    default:

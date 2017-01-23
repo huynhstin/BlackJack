@@ -88,7 +88,7 @@ public class BlackJack
     
     public void deal(Player player, int numberOfCards)
     {
-        for(int i = 0; i < numberOfCards; i++) //same as hit but without returning current score
+        for(int i = 0; i < numberOfCards; i++) 
         {
             hit(player);
         }
@@ -117,32 +117,33 @@ public class BlackJack
                 if(player.hand.get(i).getVal().getValue() == 11) // ace found; only aces are worth 11
                 {
                     Card newAce = new Card(CardValue.values()[13],player.hand.get(i).getSuit()); //13 = ace2
-                    player.hand.set(i,newAce);
+                    player.hand.set(i , newAce);
                     break;
                 }
             }
         }
-        return(player.getTotal()>21);
+        return(player.getTotal() > 21);
     }
     
     public void splitDeck(Player player)  
     {
-            Player newPlayer = new Player();
-            Card splitter = player.hand.get(1); //second card of first deck
-            player.hand.remove(1);
-            newPlayer.hand.add(splitter);
-            hit(player);
-            hit(newPlayer);
-            players.add(newPlayer);
+        Player newPlayer = new Player();
+        Card splitter = player.hand.get(1); //second card of first deck
+        player.hand.remove(1);
+        newPlayer.hand.add(splitter);
+        hit(player);
+        hit(newPlayer);
+        players.add(newPlayer);        
     }
 
     public void doubleDown(Player player)
     {
         if(player.hand.size() == 2 && player.hand.get(0).getVal().getValue() + player.hand.get(1).getVal().getValue() >= 10 && 
-        player.hand.get(0).getVal().getValue() + player.hand.get(1).getVal().getValue() <= 11) //Player has 2 cards, which add up to between 9-11
+        player.hand.get(0).getVal().getValue() + player.hand.get(1).getVal().getValue() <= 11) //Player has 2 cards, which add up to between 10-11
         {
             Card invisible = drawCard();
             invisible.setVisible(false);
+            player.setDouble();
             player.hand.add(invisible);
         }
         else
@@ -158,14 +159,18 @@ public class BlackJack
      //aaron's
     public void dealersTurn()
     {
+        if(allBust())
+        {
+            printWon(-1);
+            return;
+        }
         while(dealer.getTotal() < 16)
         {
             hit(dealer); 
         }
-        
         if(checkBust(dealer))
         {
-            System.out.println("Dealer Busted! You win!");
+            printWon(-2);
             return;
         }
         checkWhoWon();
@@ -174,35 +179,124 @@ public class BlackJack
     public void checkWhoWon()
     {
        int bestTotal = players.get(0).getTotal();
-       for(int i = 0; i < players.size(); i++) // goes through all your hands to find the total that is greatest. or closest to 21
+       for(int i = 1; i < players.size(); i++) // goes through all your hands to find the total that is greatest. or closest to 21
        {
+           if(bestTotal >= 21)
+           {
+               bestTotal = players.get(i).getTotal();
+           }           
            if(players.get(i).getTotal() > bestTotal && players.get(i).getTotal() <= 21)
            {
                bestTotal = players.get(i).getTotal();
            }
        }
-       System.out.print("Your best hand is "+bestTotal+" and dealer's is "+dealer.getTotal()+".");
-       if(bestTotal > dealer.getTotal())
-       {
-           System.out.println(" You win!");
-       }
-       else
-       {
-           System.out.println(" You lose!");
-       }
+       printWon(bestTotal);
     }
     
-    public void giveCard(int value,int player)
+    public void printWon(int bestTotal)
     {
-        Card a = new Card(CardValue.TWO,Suit.SPADES);
-        for(int i=0;i<deck.size();i++)
+        if(bestTotal == -1)
         {
-            if(deck.get(i).getVal().getValue()==value)
+            System.out.println("All decks busted. You lose! \n");
+            return;
+        }
+        if(bestTotal == -2)
+        {
+            System.out.println("Dealer Busted! You win! \n");
+            return;
+        }
+        System.out.print("Your best hand is "+bestTotal+" and dealer's is "+dealer.getTotal()+".");
+        if(bestTotal > dealer.getTotal() && bestTotal <= 21)
+        {
+            System.out.println(" You win! \n");
+        }
+        else if(bestTotal == dealer.getTotal())
+        {
+            System.out.println(" Tie! \n");
+        }
+        else
+        {
+            System.out.println(" You lose! \n");
+        }
+    }
+    
+    public void giveCard(int value, int player)
+    {
+        Card a = new Card(CardValue.TWO, Suit.SPADES);
+        for(int i = 0; i < deck.size(); i++)
+        {
+            if(deck.get(i).getVal().getValue() == value)
             {
-                a=deck.get(i);
+                a = deck.get(i);
+                deck.remove(a);
                 break;
             }
         }
         players.get(player).hand.add(a);
+        checkBust(players.get(player));
+    }
+    
+    public void removeCard(int choiceDeck, int choiceCard)
+    {
+        players.get(choiceDeck).getHand().remove(choiceCard);
+    }
+    
+    public boolean allBust() //if every player in the array is doubled down or busted, return true 
+    {
+        boolean goToDealer = true;
+        for(int i = 0; i < players.size(); i++)
+        {
+            if(!checkBust(players.get(i)))
+            {
+                goToDealer = false; 
+            }
+        }
+        return goToDealer;
+    }
+    
+    public boolean allDouble()
+    {
+        boolean goToDealer = true;
+        for(int i = 0; i < players.size(); i++)
+        {
+            if(!players.get(i).getDoubledDown())
+            {
+                goToDealer = false; 
+            }
+        }
+        return goToDealer;
+    }
+    
+    public boolean allBustOrDD()
+    {
+        boolean goToDealer = true;
+        for(int i = 0; i < players.size(); i++)
+        {
+            if(!players.get(i).getDoubledDown() && !checkBust(players.get(i)))
+            {
+                goToDealer = false;
+            }
+        }
+        return goToDealer;
+    }
+    
+    public void printAll(boolean viewAllDealer)
+    {
+         if(viewAllDealer)
+         {
+             System.out.print("Dealer's cards: ");
+             dealer.printCurrPlayer();
+         }
+         else
+         {
+             System.out.print("Dealer's face up card: ");
+             dealer.printFirstCard();
+         }
+         System.out.println("You: ");
+         for(int i = 0; i < players.size(); i++)
+         {
+             System.out.print("Hand " + (i+1) + ": ");
+             players.get(i).printCurrPlayer();
+         }
     }
 }

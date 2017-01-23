@@ -209,6 +209,7 @@ public class BlackJack
         if(bestTotal == -3)
         {
             System.out.println("Blackjack! You win!");
+            return;
         }
         System.out.print("Your best hand is "+bestTotal+" and dealer's is "+dealer.getTotal()+".");
         if(bestTotal > dealer.getTotal() && bestTotal <= 21)

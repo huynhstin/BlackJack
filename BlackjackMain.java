@@ -51,7 +51,7 @@ public class BlackjackMain
                            b.dealersTurn();
                            b.printAll(true);
                            Scanner in2 = new Scanner(System.in);
-                           System.out.println("Play again? Y/N");
+                           System.out.println("\nPlay again? Y/N");
                            String selec = in2.nextLine();
                            if(selec.equalsIgnoreCase("y"))
                            {
@@ -97,7 +97,7 @@ public class BlackjackMain
                                b.dealersTurn();
                                b.printAll(true);
                                Scanner in3 = new Scanner(System.in);
-                               System.out.println("Play again? Y/N");
+                               System.out.println("\nPlay again? Y/N");
                                String select1 = in3.nextLine();
                                if(select1.equalsIgnoreCase("y"))
                                {
@@ -132,8 +132,9 @@ public class BlackjackMain
                        break;
                    case 7: // when you stand it's dealer's turn
                        b.dealersTurn(); 
+                       b.printAll(true);
                        Scanner in1 = new Scanner(System.in);
-                       System.out.println("Play again? y/n");
+                       System.out.println("\nPlay again? y/n");
                        String choice = in1.nextLine();
                        if(choice.equals("y"))
                        {

@@ -30,24 +30,13 @@ public class Player
     public int getTotal()
     {
         int total = 0;
-        for(int i = 0; i < hand.size() ;i++)
+        for(int i = 0; i < hand.size(); i++)
         {
             total += hand.get(i).getVal().getValue();
         }
         return total;
     }
-    
-    /*
-    public boolean getDoubled()
-    {
-        return doubledDown;
-    }
-    
-    public void setDoubleDown(boolean isDoubled)
-    {
-        doubledDown = isDoubled;
-    }
-    */
+
     //remove, refer to player with instance variable arraylist
     public ArrayList<Card> getHand()
     {
@@ -67,7 +56,7 @@ public class Player
             Card aCard = (Card)cardIterator.next();
             System.out.print(aCard.getVal().getString() + " of " + aCard.getSuit() +"; ");
         }
-        System.out.println();
+        System.out.println("(" + getTotal() + ")");
     }
     
     public void printFirstCard()

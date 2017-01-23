@@ -138,11 +138,11 @@ public class BlackJack
 
     public void doubleDown(Player player)
     {
-        if(player.hand.size() == 2 && player.hand.get(0).getVal().getValue() + player.hand.get(1).getVal().getValue() >= 10 && 
-        player.hand.get(0).getVal().getValue() + player.hand.get(1).getVal().getValue() <= 11) //Player has 2 cards, which add up to between 10-11
+        int total = player.hand.get(0).getVal().getValue() + player.hand.get(1).getVal().getValue();
+        if(player.hand.size() == 2 && total >= 10 && total <= 11)//Player has 2 cards, which add up to between 10-11
         {
             Card invisible = drawCard();
-            invisible.setVisible(false);
+            invisible.setInvisible();
             player.setDouble();
             player.hand.add(invisible);
         }

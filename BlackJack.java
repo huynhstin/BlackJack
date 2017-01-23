@@ -25,6 +25,7 @@ public class BlackJack
         aaron = new Player();
         players.add(aaron);
         dealer = new Player();
+        shuffleDeck();
     }
 
     public Player getDealer()
@@ -205,14 +206,18 @@ public class BlackJack
             System.out.println("Dealer Busted! You win! \n");
             return;
         }
+        if(bestTotal == -3)
+        {
+            System.out.println("Blackjack! You win!");
+        }
         System.out.print("Your best hand is "+bestTotal+" and dealer's is "+dealer.getTotal()+".");
         if(bestTotal > dealer.getTotal() && bestTotal <= 21)
         {
             System.out.println(" You win! \n");
         }
-        else if(bestTotal == dealer.getTotal())
+        else if((bestTotal == dealer.getTotal()) || bestTotal == -4)
         {
-            System.out.println(" Tie! \n");
+            System.out.println(" Push! \n");
         }
         else
         {

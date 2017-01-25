@@ -1,11 +1,24 @@
-
 /**
- * Suits
+ * Enumeration class Suit - write a description of the enum class here
  * 
- * @author (Justin Huynh and Aaron Nguyen)
- * @version (Jan 14 2017)
+ * @author (your name here)
+ * @version (version number or date here)
  */
 public enum Suit
 {
-    SPADES, CLUBS, DIAMONDS, HEARTS;
+    HEARTS("HEART"),
+    SPADES("SPADE"),
+    CLUBS("CLUB"), 
+    DIAMONDS("DIAMOND");
+    
+    public String name;
+    private Suit(String newName)
+    {
+        name = newName;
+    }
+    
+    public String getName()
+    {
+        return name;
+    }
 }

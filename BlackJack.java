@@ -228,29 +228,23 @@ public class BlackJack
            }
        }
        
-       int bestTotal = players.get(0).getTotal(); // as default
-       for(int i = 1; i < player2.size(); i++) //find the biggest one inside the new array that has no > 21 elements left
+       if(player2.size() == 0) // nothing left that is < 21
        {
-           if(player2.get(i).getTotal() > bestTotal)
-           {
-               bestTotal = player2.get(i).getTotal();
-           }
+            int bestTotal = -1;
+            printWon(bestTotal);
        }
-       /**
-       int bestTotal = players.get(0).getTotal();
-       for(int i = 1; i < players.size(); i++) // goes through all your hands to find the total that is greatest. or closest to 21
+       else
        {
-           if(bestTotal >= 21)
+           int bestTotal = players.get(0).getTotal(); // as default
+           for(int i = 1; i < player2.size(); i++) //find the biggest one inside the new array that has no > 21 elements left
            {
-               bestTotal = players.get(i).getTotal();
-           }          
-           if(players.get(i).getTotal() > bestTotal && players.get(i).getTotal() <= 21)
-           {
-               bestTotal = players.get(i).getTotal();
+               if(player2.get(i).getTotal() > bestTotal)
+               {
+                   bestTotal = player2.get(i).getTotal();
+               }
            }
+           printWon(bestTotal);
        }
-       */
-       printWon(bestTotal);
     }
     
     public void printWon(int bestTotal) 

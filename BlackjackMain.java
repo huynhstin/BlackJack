@@ -28,6 +28,7 @@ public class BlackjackMain
                System.out.println("Press [9] to reset game.");
                System.out.println("Press [10] to hit a specific card");
                System.out.println("Press [11] to remove a specific card");
+               System.out.println("Press [12] to surrender.");
                int select = in.nextInt();
                switch(select)
                {
@@ -223,6 +224,26 @@ public class BlackjackMain
                            b.removeCard(0, choiceCard); 
                        }
                        break;
+                   case 12: 
+                       if(b.players.size() == 1 && b.players.get(0).hand.size() == 2)
+                       {
+                           Scanner in1 = new Scanner(System.in);
+                           System.out.println("Surrendered.\nPlay again? y/n");
+                           String choice = in1.nextLine();
+                           if(choice.equals("y"))
+                           {
+                               break resetter;
+                           }
+                           else
+                           {
+                               break quitter;
+                           }
+                       }
+                       else
+                       {
+                           System.out.println("Cannot surrender now.");
+                           break;
+                       }
                    default:
                        System.out.println("Pick a choice that is on the list");
                        break;

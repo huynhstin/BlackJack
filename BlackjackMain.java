@@ -89,6 +89,7 @@ public class BlackjackMain
                            if(b.dealer.getTotal() == 21 && b.dealer.getHand().size() == 2)
                            {
                                b.printWon(-4);
+                               b.printAll(true);
                                System.out.println("\nPlay again? Y/N");
                                String select1 = a.nextLine();
                                if(select1.equalsIgnoreCase("y"))
@@ -103,6 +104,7 @@ public class BlackjackMain
                            else
                            {
                                b.printWon(-3);
+                               b.printAll(true);
                                System.out.println("\nPlay again? Y/N");
                                String select1 = a.nextLine();
                                if(select1.equalsIgnoreCase("y"))
@@ -117,47 +119,6 @@ public class BlackjackMain
                        }
                        break;
                    case 4: //fix this 
-                       /**
-                       if(b.players.size() > 1) //remove
-                       {
-                           System.out.println("Which deck do you wish to hit?");
-                           a
-                           = in.nextInt() - 1;
-                       }
-                       
-                       b.hit(b.players.get(b.getCounter()));
-                       if(b.checkBust(b.players.get(b.getCounter()))) //remove
-                       {
-                           System.out.println("Deck busted.");
-                           b.incrementCounter();
-                           continue;
-                       }
-                       else if(b.players.get(b.getCounter()).getDoubledDown()) 
-                       {
-                           System.out.println("Doubled down, can't hit this deck.");
-                           continue;
-                       }
-                       else
-                       {
-                           if(b.getCounter() == b.players.size()) //remove
-                           {
-                               System.out.println("You can no longer hit. Dealer's turn. \n");
-                               b.dealersTurn();
-                               b.printAll(true);
-                               Scanner in3 = new Scanner(System.in);
-                               System.out.println("\nPlay again? Y/N");
-                               String select1 = in3.nextLine();
-                               if(select1.equalsIgnoreCase("y"))
-                               {
-                                   break resetter;
-                               }
-                               else
-                               {
-                                   break quitter;
-                               }
-                           }
-                       }
-                       */
                        b.hit(b.players.get(b.getCounter()));
                        if(b.checkBust(b.players.get(b.getCounter())))
                        {
@@ -185,13 +146,6 @@ public class BlackjackMain
                                b.incrementCounter();
                            }
                        }
-                       
-                       /**
-                       else if(b.players.get(b.getCounter()).getDoubledDown()) 
-                       {
-                           System.out.println("Doubled down, can't hit this deck.");
-                       }
-                       */
                        b.printAll(false);
                        break;                
                    case 5: //view hands of all players

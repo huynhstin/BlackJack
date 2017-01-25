@@ -200,7 +200,7 @@ public class BlackJack
             return;
         }
         
-        while(dealer.getTotal() < 16)
+        while(!checkBust(dealer) && dealer.getTotal() < 16)
         {
             hit(dealer); 
         }

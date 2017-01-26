@@ -1,0 +1,92 @@
+/**
+ * Write a description of class Graphics here.
+ * 
+ * @author (your name) 
+ * @version (a version number or a date)
+ */
+import javax.swing.*;
+import java.awt.*;
+import java.util.*;
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.awt.image.BufferedImage;
+import java.awt.event.*;
+public class GraphicsBlackJack extends JPanel
+{
+    private BufferedImage image; 
+    private BufferedImage image2;
+    private BufferedImage showCard;
+    private BlackJack a;
+    public GraphicsBlackJack()
+    {
+        a = new BlackJack();
+        //setBackground(Color.BLACK);
+        /*
+        try // try this code, if it doesnt work, go into catch, execute code
+        {
+            image = ImageIO.read(new File("A_SPADE.jpg")); // extract images in same folder as java file
+            image2 = ImageIO.read(new File("J_DIAMOND.jpg"));
+        }
+        catch (Exception e) //what if something goes wrong(what if file is corrupted, etc), catch it here 
+        {  
+            System.out.println("Try again");
+        } 
+        */
+    }
+    
+    
+    public void paintComponent(Graphics g)
+    {
+        Graphics2D g2 = (Graphics2D)g;
+        for(int i=0;i<a.getPlayers().size();i++)
+        {
+            for(int j=0;j<a.getPlayers().get(i).getHand().size();j++)
+            {
+                g2.drawImage(a.getPlayers().get(i).getHand().get(j).getImage(),100+300*i,550+50*j,null);
+            }
+            repaint();
+        }
+    }
+    
+    public static void main (String [] args)
+    {
+        JFrame frame = new JFrame();
+        frame.setSize(2000, 1000);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        GraphicsBlackJack c = new GraphicsBlackJack();
+        JButton hit = new JButton("Hit");
+        c.add(hit);
+        JButton stay = new JButton("Stay");
+        c.add(stay);
+        JButton doubleDown = new JButton("Double Down");
+        c.add(doubleDown);
+        JButton split = new JButton("Split");
+        c.add(split);
+        class HitButtonListener implements ActionListener
+        {
+            public void actionPerformed(ActionEvent event)
+            {
+                c.a.hit(c.a.players.get(c.a.getCounter()));
+            }
+        }
+        class StayButtonListener implements ActionListener
+        {
+            public void actionPerformed(ActionEvent event)
+            {
+               // c.a.
+            }
+        }
+        class SplitButtonListener implements ActionListener
+        {
+            public void actionPerformed(ActionEvent event)
+            {
+                //drawCard();
+            }
+        }
+        ActionListener hitListener = new HitButtonListener();
+        hit.addActionListener(hitListener);
+        frame.add(c);
+        frame.setVisible(true);
+    }
+}
+

@@ -257,7 +257,7 @@ public class GraphicsBlackJack extends JPanel
         {
             public void actionPerformed(ActionEvent event)
             {
-                //if(c.a.printedWon) // you can only reset the game after you have checked who won so you cant just reset while playing 
+                if(c.a.printedWon) // you can only reset the game after you have checked who won so you cant just reset while playing 
                 {
                     c.reset(); 
                     c.repaint();

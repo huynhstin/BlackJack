@@ -139,6 +139,7 @@ public class BlackJack
     {
         if(players.get(0).getTotal() == 21 && players.get(0).getHand().size() == 2)
         {
+            dealer.getHand().get(1).setVisible(true);
             if(dealer.getTotal() == 21 && dealer.getHand().size() == 2)
             {
                 printWon(-4);

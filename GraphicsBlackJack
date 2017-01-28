@@ -16,44 +16,147 @@ public class GraphicsBlackJack extends JPanel
     private BufferedImage image; 
     private BufferedImage image2;
     private BufferedImage showCard;
+    private final int FRAME_WIDTH;
+    private final int FRAME_HEIGHT;
     private BlackJack a;
     public GraphicsBlackJack()
     {
         a = new BlackJack();
-        //setBackground(Color.BLACK);
-        /*
-        try // try this code, if it doesnt work, go into catch, execute code
-        {
-            image = ImageIO.read(new File("A_SPADE.jpg")); // extract images in same folder as java file
-            image2 = ImageIO.read(new File("J_DIAMOND.jpg"));
-        }
-        catch (Exception e) //what if something goes wrong(what if file is corrupted, etc), catch it here 
-        {  
-            System.out.println("Try again");
-        } 
-        */
+        FRAME_WIDTH = 1000;
+        FRAME_HEIGHT = 900;
     }
     
+    public void hit()
+    {
+        if(!a.checkBust(a.players.get(a.getCounter()))) // if not busted
+        {
+            a.hit(a.players.get(a.getCounter())); // then hit
+            if(a.checkBust(a.players.get(a.getCounter())) && a.getCounter() == a.players.size() - 1) //now after hit, if it is busted and the last one, dealers turn
+            {
+                a.dealersTurn();
+            }
+        }
+        else 
+        {
+            a.incrementCounter();
+        }
+    }
+    
+    public void split()
+    {
+        if(a.players.get(a.getCounter()).getHand().size() == 2 && a.players.get(a.getCounter()).getHand().get(0).getVal().getString().equals(a.players.get(a.getCounter()).getHand().get(1).getVal().getString()))
+        {        
+            a.splitDeck(a.players.get(a.getCounter()));
+        }
+    }
+    
+    public void displayWinner(Graphics g)
+    {
+        Graphics2D g2 = (Graphics2D)g;
+        if(a.newBestTotal == -1)
+        {
+            g2.drawString("All decks busted. You lose!",100,100);
+            return;
+        }
+        if(a.newBestTotal == -2)
+        {
+            g2.drawString("Dealer Busted! You win!",100,100);
+            return;
+        }
+        if(a.newBestTotal == -3)
+        {
+            g2.drawString("Blackjack! You win!",100,100);
+            return;
+        }
+        g2.drawString("Your best hand is "+a.newBestTotal+" and dealer's is "+a.dealer.getTotal()+". ",200,100);
+        if(a.newBestTotal > a.dealer.getTotal() && a.newBestTotal <= 21)
+        {
+            g2.drawString("You win!",200,200);
+        }
+        else if((a.newBestTotal == a.dealer.getTotal()) || a.newBestTotal == -4)
+        {
+            g2.drawString("Push!",200,200);
+        }
+        else
+        {
+            g2.drawString("You lose!",200,200);
+        }
+    }
+    
+    public void stay()
+    {
+        if(a.getCounter() == a.players.size() - 1)
+        {
+            a.dealersTurn();
+        }
+        else
+        {
+            a.incrementCounter();
+        }
+    }
+
+    public void doubleDown()
+    {
+        Player p = a.players.get(a.getCounter()); //last player
+        int total = p.hand.get(0).getVal().getValue() + p.hand.get(1).getVal().getValue();
+        if(p.hand.size() == 2 && total >= 10 && total <= 11)
+        {
+            a.doubleDown(p);
+            if(a.getCounter() == a.players.size() - 1) // if counter is equal to the number of players currenty playing, meaning that it's the end
+            {
+                a.dealersTurn();
+            }
+            else
+            {
+                a.incrementCounter();
+            }
+        }
+    }
     
     public void paintComponent(Graphics g)
     {
         Graphics2D g2 = (Graphics2D)g;
+        g2.drawString("PLAYER",FRAME_WIDTH/2,FRAME_HEIGHT-400);
+        g2.drawString("DEALER",FRAME_WIDTH/2,400);
+        for(int i=0;i<a.dealer.getHand().size();i++)
+        {
+            g2.drawImage(a.dealer.getHand().get(i).getImage(),FRAME_WIDTH/2-50,100+i*50,null);
+        }
         for(int i=0;i<a.getPlayers().size();i++)
         {
             for(int j=0;j<a.getPlayers().get(i).getHand().size();j++)
             {
-                g2.drawImage(a.getPlayers().get(i).getHand().get(j).getImage(),100+300*i,550+50*j,null);
+                if(a.players.get(i).getHand().get(j).getVisible())
+                {
+                    g2.drawImage(a.getPlayers().get(i).getHand().get(j).getImage(),100+300*i,550+50*j,null);
+                }
+                else
+                {
+                    g2.drawImage(a.getBackImage(),100+300*i,550+50*j,null);
+                }
+                if(a.checkBust(a.players.get(i)))
+                {
+                    g2.drawString("Deck Busted",140+300*i,520);
+                    a.incrementCounter();
+                }
             }
-            repaint();
+            String b = a.getPlayers().get(i).getTotal()+"";
+            g2.drawString("TOTAL: "+b,140+300*i,540);
+            
         }
+        if(a.printedWon)
+        {
+            displayWinner(g2);
+        }
+        repaint();
     }
     
-    public static void main (String [] args)
+    public static void main (String [] args) throws InterruptedException
     {
         JFrame frame = new JFrame();
-        frame.setSize(2000, 1000);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         GraphicsBlackJack c = new GraphicsBlackJack();
+        frame.setSize(c.FRAME_WIDTH, c.FRAME_HEIGHT);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JButton hit = new JButton("Hit");
         c.add(hit);
         JButton stay = new JButton("Stay");
@@ -66,27 +169,60 @@ public class GraphicsBlackJack extends JPanel
         {
             public void actionPerformed(ActionEvent event)
             {
-                c.a.hit(c.a.players.get(c.a.getCounter()));
+                /*
+                if(!c.a.checkBust(c.a.players.get(c.a.getCounter())))
+                {
+                    c.a.hit(c.a.players.get(c.a.getCounter()));
+                }
+                */
+                c.hit();
+                JPanel newPanel = new JPanel();
+                frame.add(newPanel);
+                frame.setVisible(true);
             }
         }
+        
         class StayButtonListener implements ActionListener
         {
             public void actionPerformed(ActionEvent event)
             {
-               // c.a.
+                c.stay();
+                JPanel newPanel = new JPanel();
+                frame.add(newPanel);
+                frame.setVisible(true);
             }
         }
+        
         class SplitButtonListener implements ActionListener
         {
             public void actionPerformed(ActionEvent event)
             {
-                //drawCard();
+                c.split();
+                JPanel newPanel = new JPanel();
+                frame.add(newPanel);
+                frame.setVisible(true);
+            }
+        }
+        
+        class DoubleButtonListener implements ActionListener
+        {
+            public void actionPerformed(ActionEvent event)
+            {
+                c.doubleDown();
+                JPanel newPanel = new JPanel();
+                frame.add(newPanel);
+                frame.setVisible(true);
             }
         }
         ActionListener hitListener = new HitButtonListener();
+        ActionListener splitListener = new SplitButtonListener();
+        ActionListener stayListener = new StayButtonListener();
+        ActionListener doubleListener = new DoubleButtonListener();
         hit.addActionListener(hitListener);
+        split.addActionListener(splitListener);
+        stay.addActionListener(stayListener);
+        doubleDown.addActionListener(doubleListener);
         frame.add(c);
         frame.setVisible(true);
     }
 }
-

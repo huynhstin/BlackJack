@@ -10,6 +10,9 @@
  * @version (Jan 14 2017)
  */
 import java.util.*;
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.awt.image.BufferedImage;
 public class BlackJack
 {
     private ArrayList<Card> deck; //the deck itself
@@ -17,17 +20,38 @@ public class BlackJack
     public Player dealer;
     public Player aaron;
     private int counter;
-    
+    private BufferedImage backImage;
+    public int newBestTotal;
+    public boolean printedWon;
     public BlackJack()
     {
         deck = new ArrayList <Card>();
         fillDeck();
+        //shuffleDeck();
         players = new ArrayList <Player>(); 
         aaron = new Player();
         players.add(aaron);
         dealer = new Player();
-        shuffleDeck();
         counter = 0;
+        deal(players.get(0),2);
+        deal(dealer,2);
+        newBestTotal = -99;
+        printedWon = false;
+        try
+        {
+            backImage = ImageIO.read(new File("BACK.jpg"));
+        }
+        catch(Exception e){}
+    }
+    
+    public BufferedImage getBackImage()
+    {
+        return backImage;
+    }
+    
+    public ArrayList<Player> getPlayers()
+    {
+        return players;
     }
     
     public void incrementCounter()
@@ -151,7 +175,7 @@ public class BlackJack
         newPlayer.hand.add(splitter);
         hit(player);
         hit(newPlayer);
-        players.add(newPlayer);   
+        players.add(newPlayer);  
     }
 
     public void doubleDown(Player player)
@@ -193,13 +217,11 @@ public class BlackJack
      //aaron's
     public void dealersTurn()
     {
-        
         if(allBust())
         {
             printWon(-1);
             return;
         }
-        
         while(!checkBust(dealer) && dealer.getTotal() < 16)
         {
             hit(dealer); 
@@ -212,42 +234,8 @@ public class BlackJack
         checkWhoWon();
     }
     
-   public void checkWhoWon()
+    public void checkWhoWon()
     {
-        /**
-        ArrayList<Player> player2 = new ArrayList <Player>(); // copy the players array
-        for(int k = 0; k < players.size(); k++) // get all elements
-        {
-            player2.add(players.get(k));
-        }
-        
-        for(int j = 0; j < player2.size(); j++) // if the new one has anything bigger than 21, take it out 
-        {
-            if(player2.get(j).getTotal() > 21)
-            {    
-                player2.remove(j);
-            }
-        }
-       
-        if(player2.size() == 0) // nothing left that is < 21
-        {
-            int bestTotal = -1;
-            printWon(bestTotal);
-        }
-        else
-        {
-            int bestTotal = player2.get(0).getTotal(); // as default
-            for(int i = 1; i < player2.size(); i++) //find the biggest one inside the new array that has no > 21 elements left
-            {
-                if(player2.get(i).getTotal() > bestTotal)
-                {
-                    bestTotal = player2.get(i).getTotal();
-                }
-            }
-            printWon(bestTotal);
-        }
-        */
-        
         int bestTotal = -1;
         for(int i = 0; i < players.size(); i++)
         {
@@ -261,10 +249,12 @@ public class BlackJack
     
     public void printWon(int bestTotal) 
     {
+        /**
         if(bestTotal == -1)
         {
-            System.out.println("All decks busted. You lose! \n");
-            return;
+            //System.out.println("All decks busted. You lose! \n");
+            return -1;
+            //return;
         }
         if(bestTotal == -2)
         {
@@ -289,6 +279,9 @@ public class BlackJack
         {
             System.out.println("You lose! \n");
         }
+        */
+        printedWon = true;
+        newBestTotal = bestTotal;
     }
     
     public void giveCard(int value, int player)

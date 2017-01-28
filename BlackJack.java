@@ -25,17 +25,18 @@ public class BlackJack
     public boolean printedWon;
     public BlackJack()
     {
-        deck = new ArrayList <Card>();
+        deck = new ArrayList<Card>();
         fillDeck();
-        //shuffleDeck();
-        players = new ArrayList <Player>(); 
+        shuffleDeck();
+        players = new ArrayList<Player>(); 
         aaron = new Player();
         players.add(aaron);
         dealer = new Player();
         counter = 0;
-        deal(players.get(0),2);
-        deal(dealer,2);
-        newBestTotal = -99;
+        deal(players.get(0), 2);
+        deal(dealer, 2);
+        dealer.getHand().get(1).setVisible(false);
+        newBestTotal = -99; //impossible number to get 
         printedWon = false;
         try
         {
@@ -134,6 +135,23 @@ public class BlackJack
         }
     }
     
+    public void checkBlackJack() // if you immediately get 21, check conditions. doesnt currently work 
+    {
+        if(players.get(0).getTotal() == 21 && players.get(0).getHand().size() == 2)
+        {
+            if(dealer.getTotal() == 21 && dealer.getHand().size() == 2)
+            {
+                printWon(-4);
+                return;
+            }
+            else
+            {
+                printWon(-3);
+                return;
+            }
+        }
+    }
+    
     /**
      * Add top card of deck to player's Player, remove top card of deck 
      * need to add an ending where player busts all his decks
@@ -180,43 +198,15 @@ public class BlackJack
 
     public void doubleDown(Player player)
     {
-        /**
-        if(player.hand.size() == 2)
-        {
-            int total = player.hand.get(0).getVal().getValue() + player.hand.get(1).getVal().getValue();
-            if(total >= 10 && total <= 11) //Player has 2 cards, which add up to between 10-11
-            {
-                Card invisible = drawCard();
-                invisible.setVisible(false);
-                player.setDouble();
-                player.hand.add(invisible);
-            }
-            else
-            {
-                System.out.println("Conditions not met to double down hand");
-                return;
-            }      
-        }  
-        else
-        {
-            System.out.println("Can't double down.");
-            return;
-        } 
-        */
-        
         Card invisible = drawCard();
         invisible.setVisible(false);
         player.setDouble();
         player.hand.add(invisible);
     }
     
-    /**
-     * I think there's a bunch of redundancies from here down, check to see if it works
-     * With the check21s as well 
-     **/
-     //aaron's
     public void dealersTurn()
     {
+        dealer.getHand().get(1).setVisible(true);
         if(allBust())
         {
             printWon(-1);
@@ -249,37 +239,6 @@ public class BlackJack
     
     public void printWon(int bestTotal) 
     {
-        /**
-        if(bestTotal == -1)
-        {
-            //System.out.println("All decks busted. You lose! \n");
-            return -1;
-            //return;
-        }
-        if(bestTotal == -2)
-        {
-            System.out.println("Dealer Busted! You win! \n");
-            return;
-        }
-        if(bestTotal == -3)
-        {
-            System.out.println("Blackjack! You win!");
-            return;
-        }
-        System.out.print("Your best hand is "+bestTotal+" and dealer's is "+dealer.getTotal()+". ");
-        if(bestTotal > dealer.getTotal() && bestTotal <= 21)
-        {
-            System.out.println("You win! \n");
-        }
-        else if((bestTotal == dealer.getTotal()) || bestTotal == -4)
-        {
-            System.out.println("Push! \n");
-        }
-        else
-        {
-            System.out.println("You lose! \n");
-        }
-        */
         printedWon = true;
         newBestTotal = bestTotal;
     }
@@ -318,35 +277,6 @@ public class BlackJack
         return goToDealer;
     }
     
-    /**
-    //take out
-    public boolean allDouble()
-    {
-        boolean goToDealer = true;
-        for(int i = 0; i < players.size(); i++)
-        {
-            if(!players.get(i).getDoubledDown())
-            {
-                goToDealer = false; 
-            }
-        }
-        return goToDealer;
-    }
-    
-    public boolean allBustOrDD()
-    {
-        boolean goToDealer = true;
-        for(int i = 0; i < players.size(); i++)
-        {
-            if(!players.get(i).getDoubledDown() && !checkBust(players.get(i)))
-            {
-                goToDealer = false;
-            }
-        }
-        return goToDealer;
-    }
-    
-    */
     public void printAll(boolean viewAllDealer)
     {
          if(viewAllDealer)

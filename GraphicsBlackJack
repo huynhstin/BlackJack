@@ -13,17 +13,22 @@ import java.awt.image.BufferedImage;
 import java.awt.event.*;
 public class GraphicsBlackJack extends JPanel
 {
-    private BufferedImage image; 
-    private BufferedImage image2;
-    private BufferedImage showCard;
     private final int FRAME_WIDTH;
     private final int FRAME_HEIGHT;
     private BlackJack a;
     public GraphicsBlackJack()
     {
         a = new BlackJack();
-        FRAME_WIDTH = 1000;
-        FRAME_HEIGHT = 900;
+        a.checkBlackJack();
+        FRAME_WIDTH = 1200;
+        FRAME_HEIGHT = 1000;
+    }
+    
+    public void reset() // create a new blackjack game to reset 
+    {
+        a = new BlackJack();
+        a.checkBlackJack();
+        repaint();
     }
     
     public void hit()
@@ -52,34 +57,44 @@ public class GraphicsBlackJack extends JPanel
     
     public void displayWinner(Graphics g)
     {
+        for(int i = 0; i < a.players.size(); i++) // when its time to display winner, make doubled down cards visible again
+        {
+            if(a.players.get(i).getDoubledDown())
+            {
+                a.players.get(i).getHand().get(2).setVisible(true);
+            }
+        }
         Graphics2D g2 = (Graphics2D)g;
         if(a.newBestTotal == -1)
         {
-            g2.drawString("All decks busted. You lose!",100,100);
+            g2.drawString("All decks busted. You lose!", (FRAME_WIDTH / 2) - 75, 360);
             return;
         }
         if(a.newBestTotal == -2)
         {
-            g2.drawString("Dealer Busted! You win!",100,100);
+            g2.drawString("Dealer Busted! You win!", (FRAME_WIDTH / 2) - 75, 360);
             return;
         }
         if(a.newBestTotal == -3)
         {
-            g2.drawString("Blackjack! You win!",100,100);
+            g2.drawString("Blackjack! You win!", (FRAME_WIDTH / 2) - 75 , 360);
             return;
         }
-        g2.drawString("Your best hand is "+a.newBestTotal+" and dealer's is "+a.dealer.getTotal()+". ",200,100);
+        g2.drawString("Your best hand is "+a.newBestTotal+" and dealer's is "+a.dealer.getTotal()+". ",  (FRAME_WIDTH / 2) - 75, 348);
         if(a.newBestTotal > a.dealer.getTotal() && a.newBestTotal <= 21)
         {
-            g2.drawString("You win!",200,200);
+            g2.drawString("You win!",  (FRAME_WIDTH / 2), 360);
+            return;
         }
         else if((a.newBestTotal == a.dealer.getTotal()) || a.newBestTotal == -4)
         {
-            g2.drawString("Push!",200,200);
+            g2.drawString("Push!",  (FRAME_WIDTH / 2), 360);
+            return;
         }
         else
         {
-            g2.drawString("You lose!",200,200);
+            g2.drawString("You lose!",  (FRAME_WIDTH / 2), 360);
+            return;
         }
     }
     
@@ -88,6 +103,7 @@ public class GraphicsBlackJack extends JPanel
         if(a.getCounter() == a.players.size() - 1)
         {
             a.dealersTurn();
+            return;
         }
         else
         {
@@ -97,7 +113,7 @@ public class GraphicsBlackJack extends JPanel
 
     public void doubleDown()
     {
-        Player p = a.players.get(a.getCounter()); //last player
+        Player p = a.players.get(a.getCounter()); // last player
         int total = p.hand.get(0).getVal().getValue() + p.hand.get(1).getVal().getValue();
         if(p.hand.size() == 2 && total >= 10 && total <= 11)
         {
@@ -116,33 +132,53 @@ public class GraphicsBlackJack extends JPanel
     public void paintComponent(Graphics g)
     {
         Graphics2D g2 = (Graphics2D)g;
-        g2.drawString("PLAYER",FRAME_WIDTH/2,FRAME_HEIGHT-400);
-        g2.drawString("DEALER",FRAME_WIDTH/2,400);
-        for(int i=0;i<a.dealer.getHand().size();i++)
+        //g2.drawString("PLAYER", FRAME_WIDTH / 2, FRAME_HEIGHT - 400); // took out player indicator
+        g2.drawString("DEALER", FRAME_WIDTH / 2, 65);
+        for(int i = 0; i < a.dealer.getHand().size(); i++)
         {
-            g2.drawImage(a.dealer.getHand().get(i).getImage(),FRAME_WIDTH/2-50,100+i*50,null);
+            if(a.dealer.getHand().get(i).getVisible())
+            {
+                //g2.drawImage(a.dealer.getHand().get(i).getImage(), (FRAME_WIDTH/2)-50, 75+i*50, null);
+                g2.drawImage(a.dealer.getHand().get(i).getImage(), ((FRAME_WIDTH / 8) - 35) +50*i, 85, null); // modified the above line to go horizontal 
+            }
+            else
+            {
+                g2.drawImage(a.getBackImage(), ((FRAME_WIDTH / 8) - 35) +50*i, 85, null);
+            }
         }
-        for(int i=0;i<a.getPlayers().size();i++)
+        
+        for(int i = 0; i < a.getPlayers().size(); i++)
         {
-            for(int j=0;j<a.getPlayers().get(i).getHand().size();j++)
+            for(int j = 0; j < a.getPlayers().get(i).getHand().size(); j++)
             {
                 if(a.players.get(i).getHand().get(j).getVisible())
                 {
-                    g2.drawImage(a.getPlayers().get(i).getHand().get(j).getImage(),100+300*i,550+50*j,null);
+                    g2.drawImage(a.getPlayers().get(i).getHand().get(j).getImage(), 100+300*i, 400+50*j, null);
                 }
                 else
                 {
-                    g2.drawImage(a.getBackImage(),100+300*i,550+50*j,null);
+                    g2.drawImage(a.getBackImage(), 100+300*i, 400+50*j, null);
                 }
-                if(a.checkBust(a.players.get(i)))
+                if(i == a.getCounter()) // print out current hand indicator
+                { 
+                    if(a.checkBust(a.players.get(i))) // if current hand is busted, say so 
+                    {
+                        g2.drawString("Deck Busted", 125+300*i, 375);
+                        a.incrementCounter();
+                    }
+                    else 
+                    {
+                        g2.drawString("Current Hand" , 125 + 300*i, 375); //otherwise indicate current hand
+                    }
+                } 
+                else if(a.checkBust(a.players.get(i)))
                 {
-                    g2.drawString("Deck Busted",140+300*i,520);
+                    g2.drawString("Deck Busted", 125+300*i, 375);
                     a.incrementCounter();
                 }
             }
             String b = a.getPlayers().get(i).getTotal()+"";
-            g2.drawString("TOTAL: "+b,140+300*i,540);
-            
+            g2.drawString("TOTAL: "+b, 140+300*i , 390);
         }
         if(a.printedWon)
         {
@@ -165,20 +201,21 @@ public class GraphicsBlackJack extends JPanel
         c.add(doubleDown);
         JButton split = new JButton("Split");
         c.add(split);
+        JButton reset = new JButton("Reset");
+        c.add(reset);
+        JButton exit = new JButton("Exit");
+        c.add(exit);
         class HitButtonListener implements ActionListener
         {
             public void actionPerformed(ActionEvent event)
             {
-                /*
-                if(!c.a.checkBust(c.a.players.get(c.a.getCounter())))
+                if(!c.a.printedWon)
                 {
-                    c.a.hit(c.a.players.get(c.a.getCounter()));
+                    c.hit();
+                    JPanel newPanel = new JPanel();
+                    frame.add(newPanel);
+                    frame.setVisible(true);
                 }
-                */
-                c.hit();
-                JPanel newPanel = new JPanel();
-                frame.add(newPanel);
-                frame.setVisible(true);
             }
         }
         
@@ -190,7 +227,8 @@ public class GraphicsBlackJack extends JPanel
                 JPanel newPanel = new JPanel();
                 frame.add(newPanel);
                 frame.setVisible(true);
-            }
+                return;
+           }
         }
         
         class SplitButtonListener implements ActionListener
@@ -214,14 +252,42 @@ public class GraphicsBlackJack extends JPanel
                 frame.setVisible(true);
             }
         }
+        
+        class ResetButtonListener implements ActionListener
+        {
+            public void actionPerformed(ActionEvent event)
+            {
+                //if(c.a.printedWon) // you can only reset the game after you have checked who won so you cant just reset while playing 
+                {
+                    c.reset(); 
+                    c.repaint();
+                    JPanel newPanel = new JPanel();
+                    frame.add(newPanel);
+                    frame.setVisible(true);
+                }
+            }
+        }
+        
+        class ExitButtonListener implements ActionListener
+        {
+            public void actionPerformed(ActionEvent event) //exit button
+            {
+                System.exit(0);
+            }
+        }
+
         ActionListener hitListener = new HitButtonListener();
         ActionListener splitListener = new SplitButtonListener();
         ActionListener stayListener = new StayButtonListener();
         ActionListener doubleListener = new DoubleButtonListener();
+        ActionListener resetListener = new ResetButtonListener();
+        ActionListener exitListener = new ExitButtonListener();
         hit.addActionListener(hitListener);
         split.addActionListener(splitListener);
         stay.addActionListener(stayListener);
         doubleDown.addActionListener(doubleListener);
+        reset.addActionListener(resetListener);
+        exit.addActionListener(exitListener);
         frame.add(c);
         frame.setVisible(true);
     }

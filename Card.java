@@ -25,9 +25,19 @@ public class Card
         aceSwitched = false;
         try
         {
-            image = ImageIO.read(new File(cardVal.getString() + "_" + suit.getName() +".jpg"));// use cardval, suit enums to load image
+            image = ImageIO.read(new File(cardVal.getString() + "_" + suit.getName() +".jpg")); // use cardval, suit enums to load image
         }
         catch(Exception e){}
+    }
+    
+    public boolean getVisible()
+    {
+        return visible;
+    }
+    
+    public void setVisible(boolean visiblity)
+    {
+        visible = visiblity;
     }
     
     public BufferedImage getImage()
@@ -63,10 +73,5 @@ public class Card
     public void setSuit(Suit newSuit)
     {
         suit = newSuit;
-    }
-    
-    public void setVisible(boolean choice)
-    {
-        visible = choice;
     }
 }

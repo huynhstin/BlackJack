@@ -16,19 +16,58 @@ public class GraphicsBlackJack extends JPanel
     private final int FRAME_WIDTH;
     private final int FRAME_HEIGHT;
     private BlackJack a;
+    private Betting d; 
+    public JFrame frame;
+    public boolean canUpdate; // check if its still possible to update the money 
     public GraphicsBlackJack()
     {
         a = new BlackJack();
         a.checkBlackJack();
+        d = new Betting(); // new betting class
+        frame = new JFrame(); // jframe now an instance variable, so i can make dialogs outside of paintcomponent
+        canUpdate = true; // set true by default
         FRAME_WIDTH = 1200;
         FRAME_HEIGHT = 1000;
     }
     
     public void reset() // create a new blackjack game to reset 
     {
-        a = new BlackJack();
+        a = new BlackJack(); 
         a.checkBlackJack();
+        canUpdate = true; 
         repaint();
+    }
+    
+    public void doBets()
+    {
+        frame.setVisible(false); // hide the frame, so you cant see what the new cards are before betting 
+        if(d.getMoney() <= 0) // if youre out of money
+        { 
+            JOptionPane.showMessageDialog(frame, "You're out of money.", "You're broke", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
+            return;
+        }
+        String stringBet; // joptionpane returns a string
+        stringBet = JOptionPane.showInputDialog(frame, "You currently have $" +d.getMoney()+". \nHow much would you like to bet?", "Place bet", JOptionPane.PLAIN_MESSAGE);
+        if(stringBet == null) // if you press cancel, exit
+        {
+            System.exit(0);
+        }
+        int bet = Integer.parseInt(stringBet); // cast to int 
+        if(bet > d.getMoney()) 
+        {
+            JOptionPane.showMessageDialog(frame, "You can't bet that much." , "Error",  JOptionPane.ERROR_MESSAGE);
+            doBets();
+            return;
+        }
+        if(bet < 1)
+        {
+            JOptionPane.showMessageDialog(frame, "You can't bet that little." , "Error",  JOptionPane.ERROR_MESSAGE);
+            doBets();
+            return;
+        }
+        d.addBet(bet);
+        frame.setVisible(true);
     }
     
     public void hit()
@@ -52,6 +91,26 @@ public class GraphicsBlackJack extends JPanel
         if(a.players.get(a.getCounter()).getHand().size() == 2 && a.players.get(a.getCounter()).getHand().get(0).getVal().getString().equals(a.players.get(a.getCounter()).getHand().get(1).getVal().getString()))
         {        
             a.splitDeck(a.players.get(a.getCounter()));
+            d.addBet(2 * d.getBet());
+        }
+    }
+    
+    public void updateMoney()
+    {
+        canUpdate = false;
+        if(a.newBestTotal == -2 || a.newBestTotal == -3 || (a.newBestTotal > a.dealer.getTotal() && a.newBestTotal <= 21))
+        {
+            d.won();
+            return;
+        }
+        else if((a.newBestTotal == a.dealer.getTotal()) || a.newBestTotal == -4)
+        {
+            return;
+        }
+        else
+        {
+            d.lost();
+            return;
         }
     }
     
@@ -118,6 +177,7 @@ public class GraphicsBlackJack extends JPanel
         if(p.hand.size() == 2 && total >= 10 && total <= 11)
         {
             a.doubleDown(p);
+            d.addBet(2 * d.getBet());
             if(a.getCounter() == a.players.size() - 1) // if counter is equal to the number of players currenty playing, meaning that it's the end
             {
                 a.dealersTurn();
@@ -194,15 +254,20 @@ public class GraphicsBlackJack extends JPanel
         {
             displayWinner(g2);
         }
+        if(a.printedWon && canUpdate)
+        {
+            updateMoney();
+        }
+        g2.drawString("MONEY: $" +d.getMoney(), FRAME_WIDTH / 2 + 400, 65);
+        g2.drawString("BET: $" +d.getBet(), FRAME_WIDTH / 2 + 400, 80);
         repaint();
     }
     
     public static void main (String [] args) throws InterruptedException
-    {
-        JFrame frame = new JFrame();
+    {        
         GraphicsBlackJack c = new GraphicsBlackJack();
-        frame.setSize(c.FRAME_WIDTH, c.FRAME_HEIGHT);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        c.frame.setSize(c.FRAME_WIDTH, c.FRAME_HEIGHT);
+        c.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JButton hit = new JButton("Hit");
         c.add(hit);
         JButton stay = new JButton("Stay");
@@ -211,7 +276,7 @@ public class GraphicsBlackJack extends JPanel
         c.add(doubleDown);
         JButton split = new JButton("Split");
         c.add(split);
-        JButton reset = new JButton("Reset");
+        JButton reset = new JButton("Play Again");
         c.add(reset);
         JButton exit = new JButton("Exit");
         c.add(exit);
@@ -223,8 +288,8 @@ public class GraphicsBlackJack extends JPanel
                 {
                     c.hit();
                     JPanel newPanel = new JPanel();
-                    frame.add(newPanel);
-                    frame.setVisible(true);
+                    c.frame.add(newPanel);
+                    c.frame.setVisible(true);
                 }
             }
         }
@@ -235,8 +300,9 @@ public class GraphicsBlackJack extends JPanel
             {
                 c.stay();
                 JPanel newPanel = new JPanel();
-                frame.add(newPanel);
-                frame.setVisible(true);
+                c.frame.add(newPanel);
+                c.frame.setVisible(true);
+                c.repaint();
                 return;
            }
         }
@@ -247,8 +313,8 @@ public class GraphicsBlackJack extends JPanel
             {
                 c.split();
                 JPanel newPanel = new JPanel();
-                frame.add(newPanel);
-                frame.setVisible(true);
+                c.frame.add(newPanel);
+                c.frame.setVisible(true);
             }
         }
         
@@ -258,8 +324,8 @@ public class GraphicsBlackJack extends JPanel
             {
                 c.doubleDown();
                 JPanel newPanel = new JPanel();
-                frame.add(newPanel);
-                frame.setVisible(true);
+                c.frame.add(newPanel);
+                c.frame.setVisible(true);
             }
         }
         
@@ -270,10 +336,11 @@ public class GraphicsBlackJack extends JPanel
                 if(c.a.printedWon) // you can only reset the game after you have checked who won so you cant just reset while playing 
                 {
                     c.reset(); 
+                    c.doBets();
                     c.repaint();
                     JPanel newPanel = new JPanel();
-                    frame.add(newPanel);
-                    frame.setVisible(true);
+                    c.frame.add(newPanel);
+                    c.frame.setVisible(true);
                 }
             }
         }
@@ -298,7 +365,7 @@ public class GraphicsBlackJack extends JPanel
         doubleDown.addActionListener(doubleListener);
         reset.addActionListener(resetListener);
         exit.addActionListener(exitListener);
-        frame.add(c);
-        frame.setVisible(true);
+        c.frame.add(c);
+        c.doBets();
     }
 }

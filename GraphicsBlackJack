@@ -177,8 +177,18 @@ public class GraphicsBlackJack extends JPanel
                     a.incrementCounter();
                 }
             }
-            String b = a.getPlayers().get(i).getTotal()+"";
-            g2.drawString("TOTAL: "+b, 140+300*i , 390);
+            if(a.players.get(i).getDoubledDown() && !a.printedWon)
+            {
+                int total = a.getPlayers().get(i).getTotal(); // the total hand value
+                int lastCard = a.getPlayers().get(i).hand.get(2).getVal().getValue(); // the last card valu e
+                String b = (total - lastCard) + "";
+                g2.drawString("TOTAL: "+b+" + ?", 140+300*i , 390);
+            }
+            else 
+            {
+                String b = a.getPlayers().get(i).getTotal()+"";
+                g2.drawString("TOTAL: "+b, 140+300*i , 390);
+            }
         }
         if(a.printedWon)
         {

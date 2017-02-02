@@ -1,4 +1,3 @@
-
 /**
  * Card values
  * 
@@ -7,19 +6,20 @@
  */
 public enum CardValue
 {
-    TWO("Two", 2),
-    THREE("Three", 3), 
-    FOUR("Four", 4), 
-    FIVE("Five", 5), 
-    SIX("Six", 6), 
-    SEVEN("Seven", 7), 
-    EIGHT("Eight", 8), 
-    NINE("Nine", 9), 
-    TEN("Ten", 10), 
-    JACK("Jack", 10), 
-    QUEEN("Queen", 10), 
-    KING("King", 10), 
-    ACE("Ace", 11);
+    TWO("2", 2),
+    THREE("3", 3), 
+    FOUR("4", 4), 
+    FIVE("5", 5), 
+    SIX("6", 6), 
+    SEVEN("7", 7), 
+    EIGHT("8", 8), 
+    NINE("9", 9), 
+    TEN("10", 10), 
+    JACK("J", 10), 
+    QUEEN("Q", 10), 
+    KING("K", 10),
+    ACE("A", 11);
+    //ACE2("A, 1);
     public int cardVal;
     public String name; 
     private CardValue(String newName, int num)
@@ -33,9 +33,13 @@ public enum CardValue
         return cardVal;
     }
     
+    public void setValue(int newValue)
+    {
+        cardVal = newValue;
+    }
+    
     public String getString()
     {
         return name;
     }
 }
-

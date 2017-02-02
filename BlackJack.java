@@ -35,6 +35,7 @@ public class BlackJack
         counter = 0;
         deal(players.get(0), 2);
         deal(dealer, 2);
+        switchAce(aaron);
         dealer.getHand().get(1).setVisible(false);
         newBestTotal = -99; //impossible number to get 
         printedWon = false;
@@ -166,14 +167,14 @@ public class BlackJack
     /**
      * aaron's check21. return a boolean whether or not busted
      */
-    public boolean checkBust(Player player) 
+    public void switchAce(Player player) 
     {
         if(player.getTotal() > 21) 
         {
             //checks for potential ace
             for(int i = 0; i < player.hand.size(); i++) 
             {
-                if(player.hand.get(i).getVal().getValue() == 11 && !player.hand.get(i).isSwitched()) // ace found; only aces are worth 11
+                if(player.getTotal() > 21 && player.hand.get(i).getVal().getValue() == 11 && !player.hand.get(i).isSwitched()) // ace found; only aces are worth 11
                 {
                     //Card newAce = new Card(CardValue.values()[13],player.hand.get(i).getSuit()); //13 = ace2
                     //player.hand.set(i , newAce);
@@ -183,7 +184,12 @@ public class BlackJack
                 }
             }
         }
-        return(player.getTotal() > 21);
+        //return(player.getTotal() > 21);
+    }
+    
+    public boolean checkBust(Player player)
+    {
+        return (player.getTotal() > 21);
     }
     
     public void splitDeck(Player player)  
@@ -205,6 +211,11 @@ public class BlackJack
         player.hand.add(invisible);
     }
     
+    public boolean dealerBust()
+    {
+        return(dealer.getTotal() > 21);
+    }
+    
     public void dealersTurn()
     {
         dealer.getHand().get(1).setVisible(true);
@@ -213,11 +224,11 @@ public class BlackJack
             printWon(-1);
             return;
         }
-        while(!checkBust(dealer) && dealer.getTotal() < 16)
+        while(!dealerBust() && dealer.getTotal() < 16)
         {
             hit(dealer); 
         }
-        if(checkBust(dealer))
+        if(dealerBust())
         {
             printWon(-2);
             return;

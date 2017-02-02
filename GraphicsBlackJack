@@ -24,10 +24,14 @@ public class GraphicsBlackJack extends JPanel
         a = new BlackJack();
         a.checkBlackJack();
         d = new Betting(); // new betting class
-        frame = new JFrame(); // jframe now an instance variable, so i can make dialogs outside of paintcomponent
-        canUpdate = true; // set true by default
+        frame = new JFrame(); 
+        frame.setBackground(new Color(0, 145, 58));// jframe now an instance variable, so i can make dialogs outside of paintcomponent
         FRAME_WIDTH = 1200;
         FRAME_HEIGHT = 1000;
+        frame.setSize(FRAME_WIDTH, FRAME_HEIGHT);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setTitle("Blackjack");
+        canUpdate = true; // set true by default
     }
     
     public void reset() // create a new blackjack game to reset 
@@ -98,13 +102,13 @@ public class GraphicsBlackJack extends JPanel
     public void updateMoney()
     {
         canUpdate = false;
-        if(a.newBestTotal == -2 || a.newBestTotal == -3 || (a.newBestTotal > a.dealer.getTotal() && a.newBestTotal <= 21))
+        if((a.newBestTotal == a.dealer.getTotal()) || a.newBestTotal == -4)
         {
-            d.won();
             return;
         }
-        else if((a.newBestTotal == a.dealer.getTotal()) || a.newBestTotal == -4)
+        else if(a.newBestTotal == -2 || a.newBestTotal == -3 || (a.newBestTotal > a.dealer.getTotal() && a.newBestTotal <= 21))
         {
+            d.won();
             return;
         }
         else
@@ -127,32 +131,39 @@ public class GraphicsBlackJack extends JPanel
         if(a.newBestTotal == -1)
         {
             g2.drawString("All decks busted. You lose!", (FRAME_WIDTH / 2) - 75, 360);
+            g2.setColor(Color.white);
             return;
         }
         if(a.newBestTotal == -2)
         {
             g2.drawString("Dealer Busted! You win!", (FRAME_WIDTH / 2) - 75, 360);
+            g2.setColor(Color.white);
             return;
         }
         if(a.newBestTotal == -3)
         {
             g2.drawString("Blackjack! You win!", (FRAME_WIDTH / 2) - 75 , 360);
+            g2.setColor(Color.white);
             return;
         }
         g2.drawString("Your best hand is "+a.newBestTotal+" and dealer's is "+a.dealer.getTotal()+". ",  (FRAME_WIDTH / 2) - 75, 348);
+        g2.setColor(Color.white);
         if(a.newBestTotal > a.dealer.getTotal() && a.newBestTotal <= 21)
         {
             g2.drawString("You win!",  (FRAME_WIDTH / 2), 360);
+            g2.setColor(Color.white);
             return;
         }
         else if((a.newBestTotal == a.dealer.getTotal()) || a.newBestTotal == -4)
         {
             g2.drawString("Push!",  (FRAME_WIDTH / 2), 360);
+            g2.setColor(Color.white);
             return;
         }
         else
         {
             g2.drawString("You lose!",  (FRAME_WIDTH / 2), 360);
+            g2.setColor(Color.white);
             return;
         }
     }
@@ -180,7 +191,7 @@ public class GraphicsBlackJack extends JPanel
             d.addBet(2 * d.getBet());
             if(a.getCounter() == a.players.size() - 1) // if counter is equal to the number of players currenty playing, meaning that it's the end
             {
-                a.dealersTurn();
+                return;
             }
             else
             {
@@ -192,7 +203,9 @@ public class GraphicsBlackJack extends JPanel
     public void paintComponent(Graphics g)
     {
         Graphics2D g2 = (Graphics2D)g;
+        frame.setBackground(new Color(0, 145, 58));
         //g2.drawString("PLAYER", FRAME_WIDTH / 2, FRAME_HEIGHT - 400); // took out player indicator
+        g2.setColor(Color.white);
         g2.drawString("DEALER", FRAME_WIDTH / 2, 65);
         for(int i = 0; i < a.dealer.getHand().size(); i++)
         {
@@ -219,23 +232,28 @@ public class GraphicsBlackJack extends JPanel
                 {
                     g2.drawImage(a.getBackImage(), 100+300*i, 400+50*j, null);
                 }
+                
                 if(i == a.getCounter()) // print out current hand indicator
                 { 
                     if(a.checkBust(a.players.get(i))) // if current hand is busted, say so 
                     {
                         g2.drawString("Deck Busted", 125+300*i, 375);
+                        g2.setColor(Color.white);
                         a.incrementCounter();
                     }
                     else 
                     {
                         g2.drawString("Current Hand" , 125 + 300*i, 375); //otherwise indicate current hand
+                        g2.setColor(Color.white);
                     }
                 } 
                 else if(a.checkBust(a.players.get(i)))
                 {
                     g2.drawString("Deck Busted", 125+300*i, 375);
+                    g2.setColor(Color.white);
                     a.incrementCounter();
                 }
+                
             }
             if(a.players.get(i).getDoubledDown() && !a.printedWon)
             {
@@ -243,11 +261,13 @@ public class GraphicsBlackJack extends JPanel
                 int lastCard = a.getPlayers().get(i).hand.get(2).getVal().getValue(); // the last card valu e
                 String b = (total - lastCard) + "";
                 g2.drawString("TOTAL: "+b+" + ?", 140+300*i , 390);
+                g2.setColor(Color.white);
             }
             else 
             {
                 String b = a.getPlayers().get(i).getTotal()+"";
                 g2.drawString("TOTAL: "+b, 140+300*i , 390);
+                g2.setColor(Color.white);
             }
         }
         if(a.printedWon)
@@ -259,15 +279,15 @@ public class GraphicsBlackJack extends JPanel
             updateMoney();
         }
         g2.drawString("MONEY: $" +d.getMoney(), FRAME_WIDTH / 2 + 400, 65);
+        g2.setColor(Color.white);
         g2.drawString("BET: $" +d.getBet(), FRAME_WIDTH / 2 + 400, 80);
+        g2.setColor(Color.white);
         repaint();
     }
     
     public static void main (String [] args) throws InterruptedException
     {        
         GraphicsBlackJack c = new GraphicsBlackJack();
-        c.frame.setSize(c.FRAME_WIDTH, c.FRAME_HEIGHT);
-        c.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JButton hit = new JButton("Hit");
         c.add(hit);
         JButton stay = new JButton("Stay");
@@ -284,11 +304,13 @@ public class GraphicsBlackJack extends JPanel
         {
             public void actionPerformed(ActionEvent event)
             {
-                if(!c.a.printedWon)
+                if(!c.a.printedWon && !c.a.players.get(c.a.getCounter()).getDoubledDown())
                 {
                     c.hit();
+                    c.a.switchAce(c.a.players.get(0));
                     JPanel newPanel = new JPanel();
                     c.frame.add(newPanel);
+                    newPanel.setBackground(new Color(0, 145, 58));
                     c.frame.setVisible(true);
                 }
             }
@@ -301,6 +323,7 @@ public class GraphicsBlackJack extends JPanel
                 c.stay();
                 JPanel newPanel = new JPanel();
                 c.frame.add(newPanel);
+                newPanel.setBackground(new Color(0, 145, 58));
                 c.frame.setVisible(true);
                 c.repaint();
                 return;
@@ -314,6 +337,7 @@ public class GraphicsBlackJack extends JPanel
                 c.split();
                 JPanel newPanel = new JPanel();
                 c.frame.add(newPanel);
+                newPanel.setBackground(new Color(0, 145, 58));
                 c.frame.setVisible(true);
             }
         }
@@ -323,8 +347,10 @@ public class GraphicsBlackJack extends JPanel
             public void actionPerformed(ActionEvent event)
             {
                 c.doubleDown();
+                c.a.switchAce(c.a.players.get(0));
                 JPanel newPanel = new JPanel();
                 c.frame.add(newPanel);
+                newPanel.setBackground(new Color(0, 145, 58));
                 c.frame.setVisible(true);
             }
         }
@@ -340,6 +366,7 @@ public class GraphicsBlackJack extends JPanel
                     c.repaint();
                     JPanel newPanel = new JPanel();
                     c.frame.add(newPanel);
+                    newPanel.setBackground(new Color(0, 145, 58));
                     c.frame.setVisible(true);
                 }
             }
@@ -366,6 +393,8 @@ public class GraphicsBlackJack extends JPanel
         reset.addActionListener(resetListener);
         exit.addActionListener(exitListener);
         c.frame.add(c);
+        c.frame.setVisible(true);
+
         c.doBets();
     }
 }
